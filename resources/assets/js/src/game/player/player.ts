@@ -10,7 +10,7 @@ class Player {
         this._mesh.definedFacingForward = true;
 
         let material = new BABYLON.StandardMaterial(name + "Texture", scene);
-        material.ambientTexture = new BABYLON.Texture("src/assets/box.jpg", scene);
+        material.ambientTexture = new BABYLON.Texture("images/box.jpg", scene);
         this._mesh.material = material;
 
         let camera = new BABYLON.FollowCamera('camera1', new BABYLON.Vector3(position.x, position.y + 10, position.z), scene);

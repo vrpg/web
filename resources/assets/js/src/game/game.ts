@@ -23,7 +23,7 @@ class Game {
       { width: 10, height: 10, subdivisions: 2 }, this._scene);
     let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
 
-    groundMaterial.ambientTexture = new BABYLON.Texture("src/assets/grass.png", this._scene);
+    groundMaterial.ambientTexture = new BABYLON.Texture("images/grass.png", this._scene);
     ground.material = groundMaterial;
 
     this._player = new Player("player1", new BABYLON.Vector3(0, 0, 0), 1, this._scene);
