@@ -3,10 +3,15 @@ import "babylon";
 class Player {
     private _mesh: BABYLON.Mesh;
 
-    constructor(position: BABYLON.Vector3, size: number, scene: BABYLON.Scene) {
-        this._mesh = BABYLON.Mesh.CreateBox("player", size, scene);
+    constructor(name: string, position: BABYLON.Vector3, size: number, scene: BABYLON.Scene) {
+        this._mesh = BABYLON.Mesh.CreateBox(name, size, scene);
         position.y = position.y + size / 2;
         this._mesh.position = position;
+        this._mesh.definedFacingForward = true;
+
+        let material = new BABYLON.StandardMaterial(name + "Texture", scene);
+        material.ambientTexture = new BABYLON.Texture("src/assets/box.jpg", scene);
+        this._mesh.material = material;
 
         let camera = new BABYLON.FollowCamera('camera1', new BABYLON.Vector3(position.x, position.y + 10, position.z), scene);
         camera.lockedTarget = this.getPlayer();
