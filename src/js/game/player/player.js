@@ -15,16 +15,22 @@ define(["require", "exports", "babylon"], function (require, exports) {
             return this._mesh;
         }
         moveForward() {
-            this._mesh.position.z -= 1;
+            this._mesh.movePOV(0, 0, 1);
         }
         moveBackward() {
-            this._mesh.position.z += 1;
+            this._mesh.movePOV(0, 0, -1);
         }
         moveRight() {
-            this._mesh.position.x -= 1;
+            this._mesh.movePOV(1, 0, 0);
         }
         moveLeft() {
-            this._mesh.position.x += 1;
+            this._mesh.movePOV(-1, 0, 0);
+        }
+        turnLeft() {
+            this._mesh.rotatePOV(0, -Math.PI / 2, 0);
+        }
+        turnRight() {
+            this._mesh.rotatePOV(0, Math.PI / 2, 0);
         }
     }
     exports.Player = Player;

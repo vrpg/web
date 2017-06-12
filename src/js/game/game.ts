@@ -26,7 +26,7 @@ class Game {
     groundMaterial.ambientTexture = new BABYLON.Texture("src/assets/grass.png", this._scene);
     ground.material = groundMaterial;
 
-    this._player = new Player(new BABYLON.Vector3(0, 0, 0), 1, this._scene);
+    this._player = new Player("player1", new BABYLON.Vector3(0, 0, 0), 1, this._scene);
   }
 
   animate(): void {
@@ -51,6 +51,12 @@ class Game {
           break;
         case "KeyD":
           this._player.moveRight();
+          break;
+        case "KeyQ":
+          this._player.turnLeft();
+          break;
+        case "KeyE":
+          this._player.turnRight();
           break;
         default:
         //not necessary to handle

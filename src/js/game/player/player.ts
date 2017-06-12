@@ -19,16 +19,22 @@ class Player {
     }
 
     moveForward(): void {
-        this._mesh.position.z -= 1;
+        this._mesh.movePOV(0, 0, 1);
     }
     moveBackward(): void {
-        this._mesh.position.z += 1;
+        this._mesh.movePOV(0, 0, -1);
     }
     moveRight(): void {
-        this._mesh.position.x -= 1;
+        this._mesh.movePOV(1, 0, 0);
     }
     moveLeft(): void {
-        this._mesh.position.x += 1;
+        this._mesh.movePOV(-1, 0, 0);
+    }
+    turnLeft(): void {
+        this._mesh.rotatePOV(0, -Math.PI / 2, 0);
+    }
+    turnRight(): void {
+        this._mesh.rotatePOV(0, Math.PI / 2, 0);
     }
 }
 export { Player }
