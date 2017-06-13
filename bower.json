@@ -1,0 +1,25 @@
+{
+  "name": "vr-rpg-client",
+  "authors": [
+    "Gyorgy Bucsek <gyorgy.bucsek@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "babylonjs": "~2.5.0",
+    "requirejs": "~2.3.3"
+  }
+}

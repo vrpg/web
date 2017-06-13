@@ -1,7 +1,7 @@
 requirejs.config({
-    baseUrl: 'src/js',
+    baseUrl: 'resources/assets/js/src',
     paths: {
-        babylon: '../lib/babylon.2.5'
+        babylon: '../lib/babylonjs/dist/babylon.2.5'
     }
 });
 

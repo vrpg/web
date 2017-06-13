@@ -1,0 +1,4 @@
+/public_html/*
+/node_modules/
+/resources/assets/js/lib/*
+/.tscache/

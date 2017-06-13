@@ -10,7 +10,7 @@ class Game {
 
   constructor(canvasElement: string) {
     // Create canvas and engine
-    this._canvas = document.getElementById(canvasElement);
+    this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, true);
   }
 
@@ -23,10 +23,10 @@ class Game {
       { width: 10, height: 10, subdivisions: 2 }, this._scene);
     let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
 
-    groundMaterial.ambientTexture = new BABYLON.Texture("src/assets/grass.png", this._scene);
+    groundMaterial.ambientTexture = new BABYLON.Texture("images/grass.png", this._scene);
     ground.material = groundMaterial;
 
-    this._player = new Player(new BABYLON.Vector3(0, 0, 0), 1, this._scene);
+    this._player = new Player("player1", new BABYLON.Vector3(0, 0, 0), 1, this._scene);
   }
 
   animate(): void {
@@ -51,6 +51,12 @@ class Game {
           break;
         case "KeyD":
           this._player.moveRight();
+          break;
+        case "KeyQ":
+          this._player.turnLeft();
+          break;
+        case "KeyE":
+          this._player.turnRight();
           break;
         default:
         //not necessary to handle

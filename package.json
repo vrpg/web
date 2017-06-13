@@ -1,0 +1,22 @@
+{
+  "name": "vr-rpg-client",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "private": true,
+  "webDir": "public_html",
+  "srcAssetsDir": "resources/assets",
+  "webAssetsDir": "public_html/",
+  "jsSource": "src",
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^2.2.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ts": "~5.5.1",
+    "typescript": "~2.1.6" // this version of typescript is required for babylonjs.2.5
+  }
+}
