@@ -1,4 +1,6 @@
-import "babylon";
+/// <reference path="../references.ts" />
+
+import 'babylon';
 import { Player } from "./player/player";
 
 class Game {
@@ -62,6 +64,15 @@ class Game {
         //not necessary to handle
       }
     });
+
+    var socket = new WebSocket("ws://localhost:8080/test");
+    socket.onopen = function (event) {
+      console.log("I am connected!");
+      socket.send("i am connected!");
+    };
+    socket.onmessage = function (event) {
+      console.log("I got a message");
+    };
   }
 }
 export { Game };
