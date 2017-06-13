@@ -17,6 +17,6 @@
     "grunt-contrib-uglify": "^3.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "~5.5.1",
-    "typescript": "~2.1.6" // this version of typescript is required for babylonjs.2.5
+    "typescript": "~2.1.6", "//": ["this version of typescript is required for babylonjs.2.5"]
   }
 }
