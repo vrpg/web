@@ -10,7 +10,7 @@ class Game {
 
   constructor(canvasElement: string) {
     // Create canvas and engine
-    this._canvas = document.getElementById(canvasElement);
+    this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, true);
   }
 
