@@ -53,7 +53,6 @@ class Game implements EventListener {
     });
 
     window.addEventListener('keydown', (event) => {
-      console.log("down - " + event.code);
       switch (event.code) {
         case "KeyW":
           this._player.moveForward();
