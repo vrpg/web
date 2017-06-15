@@ -20,7 +20,7 @@ class Game implements EventListener {
     // Create canvas and engine
     this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, true);
-    this._eventSocket = new EventSocket("ws://localhost:8080/test");
+    this._eventSocket = new EventSocket("ws://vr-rpg-server.herokuapp.com/test");
     this._eventSocket.addEventListener(this);
     this._players = [];
   }
