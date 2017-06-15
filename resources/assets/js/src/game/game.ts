@@ -4,7 +4,7 @@ import 'babylon';
 import { Player } from "./player/player";
 import { EventSocket } from '../communication/eventSocket';
 import { EventListener } from '../communication/eventListener';
-import { GameMessage } from '../communication/gameMessage';
+import { GameMessage, GameMessageType } from '../communication/gameMessage';
 import { UUID } from '../util/uuid';
 
 class Game implements EventListener {
@@ -40,7 +40,8 @@ class Game implements EventListener {
     this._player = new Player("player-" + UUID.generateUUID(), new BABYLON.Vector3(0, 0.5, 0), this._scene, this._eventSocket, "camera1");
     let position: BABYLON.Vector3 = this._player.getPlayer().position;
     this._eventSocket.onOpen(() => {
-      this._eventSocket.sendEvent(new GameMessage("join", this._player._playerId, { x: position.x, y: position.y, z: position.z }));
+      this._eventSocket.sendEvent(new GameMessage(GameMessageType.JOIN, this._player._playerId, { x: position.x, y: position.y, z: position.z }));
+      this._eventSocket.sendEvent(new GameMessage(GameMessageType.GET_STATE, this._player._playerId, {}));
     });
   }
 
@@ -82,20 +83,45 @@ class Game implements EventListener {
     let content = event._eventContent;
     let source: string = event._eventSource;
     switch (event._eventName) {
-      case "join":
+      case GameMessageType.JOIN:
         this._players.push(new Player(source, new BABYLON.Vector3(content.x, content.y, content.z), this._scene));
         break;
-      case "move":
+      case GameMessageType.STATE:
+        let found: boolean;
+        for (let i in this._players) {
+          if (this._players[i]._playerId === source) {
+            found = true;
+          }
+        }
+        if (!found) {
+          this._players.push(new Player(source, new BABYLON.Vector3(content.x, content.y, content.z), this._scene));
+        }
+      case GameMessageType.MOVE:
         this._players.forEach(p => {
           if (p._playerId === source) {
             let mesh: BABYLON.Mesh = p.getPlayer();
             mesh.position.x = content.x;
             mesh.position.y = content.y;
             mesh.position.z = content.z;
-          } else {
-            console.log("p._playerId - " + p._playerId + ", source - " + source);
           }
         });
+        break;
+      case GameMessageType.LEAVE:
+        let indexForDelete;
+        for (let i in this._players) {
+          let p: Player = this._players[i];
+          if (p._playerId === source) {
+            indexForDelete = i;
+            p.getPlayer().dispose();
+          }
+        }
+        if (indexForDelete) {
+          this._players.splice(indexForDelete, 1);
+        }
+        break;
+      case GameMessageType.GET_STATE:
+        let pos: BABYLON.Vector3 = this._player.getPlayer().position;
+        this._eventSocket.sendEvent(new GameMessage(GameMessageType.STATE, this._player._playerId, { x: pos.x, y: pos.y, z: pos.z }));
         break;
       default:
         console.warn("unexpected eventName: " + event._eventName);

@@ -9,4 +9,11 @@ class GameMessage {
         this._eventContent = eventContent;
     }
 }
-export { GameMessage }
+class GameMessageType {
+    static readonly JOIN = "join";
+    static readonly MOVE = "move";
+    static readonly LEAVE = "leave";
+    static readonly GET_STATE = "get_state";
+    static readonly STATE = "state";
+}
+export { GameMessage, GameMessageType }

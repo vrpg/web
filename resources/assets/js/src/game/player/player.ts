@@ -1,6 +1,6 @@
 import "babylon";
 import { EventSocket } from '../../communication/eventSocket';
-import { GameMessage } from '../../communication/gameMessage';
+import { GameMessage, GameMessageType } from '../../communication/gameMessage';
 
 class Player {
     private readonly _mesh: BABYLON.Mesh;
@@ -58,7 +58,7 @@ class Player {
         let pos: BABYLON.Vector3 = this._mesh.position;
         var content = { x: pos.x, y: pos.y, z: pos.z };
         if (this._eventSocket)
-            this._eventSocket.sendEvent(new GameMessage("move", this._playerId, content));
+            this._eventSocket.sendEvent(new GameMessage(GameMessageType.MOVE, this._playerId, content));
     }
 }
 export { Player }
