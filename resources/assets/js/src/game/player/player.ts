@@ -1,3 +1,5 @@
+/// <reference path="../../references.ts" />
+
 import "babylon";
 import { EventSocket } from '../../communication/eventSocket';
 import { GameMessage, GameMessageType } from '../../communication/gameMessage';
@@ -16,8 +18,11 @@ class Player {
         this._mesh.definedFacingForward = true;
 
         let material = new BABYLON.StandardMaterial(name + "Texture", scene);
-        material.ambientTexture = new BABYLON.Texture("images/box.jpg", scene);
         this._mesh.material = material;
+        var imageTask = ResourceManager.getManager().addTextureTask('ground texture', "https://vr-rpg-server.herokuapp.com/resources/box.jpg");
+        imageTask.onSuccess = function (task) {
+            material.ambientTexture = task.texture;
+        }
 
         if (cameraName) {
             let camera = new BABYLON.FollowCamera(cameraName, new BABYLON.Vector3(position.x, position.y + 10, position.z), scene);

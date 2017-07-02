@@ -27,15 +27,19 @@ class Game implements EventListener {
 
   createScene(): void {
     this._scene = new BABYLON.Scene(this._engine);
+    ResourceManager.createManager(this._scene);
 
     this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this._scene);
 
     let ground = BABYLON.MeshBuilder.CreateGround('ground1',
       { width: 10, height: 10, subdivisions: 2 }, this._scene);
-    let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
 
-    groundMaterial.ambientTexture = new BABYLON.Texture("images/grass.png", this._scene);
+    let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
     ground.material = groundMaterial;
+    var imageTask = ResourceManager.getManager().addTextureTask('ground texture', "https://vr-rpg-server.herokuapp.com/resources/grass.jpg");
+    imageTask.onSuccess = function (task) {
+      groundMaterial.ambientTexture = task.texture;
+    }
 
     this._player = new Player("player-" + UUID.generateUUID(), new BABYLON.Vector3(0, 0.5, 0), this._scene, this._eventSocket, "camera1");
     let position: BABYLON.Vector3 = this._player.getPlayer().position;
@@ -52,6 +56,7 @@ class Game implements EventListener {
     window.addEventListener('resize', () => {
       this._engine.resize();
     });
+    ResourceManager.getManager().load();
 
     window.addEventListener('keydown', (event) => {
       switch (event.code) {
