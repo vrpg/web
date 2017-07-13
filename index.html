@@ -1,30 +1,17 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello React!</title>
+    </head>
+    <body>
+        <div id="example"></div>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-    <title>VR RPG - Prototype1</title>
-    <script data-main="resources/assets/js/src/index" src="resources/assets/js/lib/requirejs/require.js"></script>
-    <style>
-        html,
-        body {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+        <!-- Dependencies -->
+        <script src="./node_modules/react/dist/react.js"></script>
+        <script src="./node_modules/react-dom/dist/react-dom.js"></script>
 
-        #renderCanvas {
-            width: 100%;
-            height: 100%;
-            touch-action: none;
-        }
-    </style>
-</head>
-
-<body>
-    <canvas id="renderCanvas"></canvas>
-</body>
-
+        <!-- Main -->
+        <script src="./dist/bundle.js"></script>
+    </body>
 </html>
