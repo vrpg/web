@@ -5,6 +5,7 @@
   "dependencies": {
     "@types/react": "^15.0.38",
     "@types/react-dom": "^15.5.1",
+    "babylonjs": "^3.0.7",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
   },
