@@ -1,3 +1,6 @@
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var path = require('path');
+
 module.exports = {
     entry: "./src/index.ts",
     output: {
@@ -7,6 +10,15 @@ module.exports = {
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
+
+    context: path.join(__dirname, ''),
+    plugins: [
+        new CopyWebpackPlugin([
+            { from: 'node_modules/babylonjs/dist/preview release/babylon.js', to: 'lib' },
+            { from: 'node_modules/babylonjs/dist/preview release/gui/babylon.gui.js', to: 'lib' },
+            { from: 'index.html', to: '' }
+        ])
+    ],
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
