@@ -54,17 +54,34 @@ class Game implements EventListener {
     createGUI(): void {
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-        var button = BABYLON.GUI.Button.CreateSimpleButton("but1", "Click Me");
-        button.width = "150px";
+        var rect1 = new BABYLON.GUI.Rectangle();
+        rect1.width = "400px";
+        rect1.height = "400px";
+        rect1.cornerRadius = 20;
+        rect1.color = "Orange";
+        rect1.thickness = 4;
+        rect1.background = "green";
+        advancedTexture.addControl(rect1);
+
+        var text = new BABYLON.GUI.TextBlock();
+        text.top = "-40px";
+        text.text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur non augue et nisi porttitor pretium.";
+        text.textWrapping = true;
+        text.color = "white";
+        text.fontSize = 24;
+        rect1.addControl(text);
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("button", "Close!"); button.width = "150px";
         button.height = "40px";
         button.color = "white";
+        button.top = "40px";
         button.background = "green";
         button.onPointerDownObservable.add(function () {
-            advancedTexture.removeControl(button);
+            advancedTexture.removeControl(rect1);
         });
+        rect1.addControl(button);
 
-        advancedTexture.addControl(button);
-
+        advancedTexture.addControl(rect1);
     }
 
     animate(): void {
