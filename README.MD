@@ -23,6 +23,7 @@ VR-RPG-Client is the client side of the VR-RPG project
 - For deployment (or test with remote/deployed server) run the following command:
 
   1. npm run build:prod (after this the project can be tested with remote server)
+  2. firebase deploy (this will upload the content of the dist folder)
 
 Contact:
 gyorgy.bucsek@gmail.com
