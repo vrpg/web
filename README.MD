@@ -18,7 +18,7 @@ VR-RPG-Client is the client side of the VR-RPG project
   1.  npm install
   2.  npm run build
 
-- Now the project can be tested by opening index.html
+- Now the project can be tested by opening dist/index.html
 
 Contact:
 gyorgy.bucsek@gmail.com
