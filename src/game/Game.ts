@@ -1,6 +1,5 @@
 /// <reference path="../references.ts" />
 
-import 'babylonjs';
 import { Player } from "./player/Player";
 import { EventSocket } from '../communication/EventSocket';
 import { EventListener } from '../communication/EventListener';
@@ -48,6 +47,24 @@ class Game implements EventListener {
             this._eventSocket.sendEvent(new GameMessage(GameMessageType.JOIN, this._player._playerId, { x: position.x, y: position.y, z: position.z }));
             this._eventSocket.sendEvent(new GameMessage(GameMessageType.GET_STATE, this._player._playerId, {}));
         });
+
+        this.createGUI();
+    }
+
+    createGUI(): void {
+        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("but1", "Click Me");
+        button.width = "150px";
+        button.height = "40px";
+        button.color = "white";
+        button.background = "green";
+        button.onPointerDownObservable.add(function () {
+            advancedTexture.removeControl(button);
+        });
+
+        advancedTexture.addControl(button);
+
     }
 
     animate(): void {
