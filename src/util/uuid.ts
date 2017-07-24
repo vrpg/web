@@ -9,4 +9,5 @@ module UUID {
         return uuid;
     };
 }
+
 export { UUID }

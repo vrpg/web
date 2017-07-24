@@ -16,4 +16,5 @@ class GameMessageType {
     static readonly GET_STATE = "get_state";
     static readonly STATE = "state";
 }
+
 export { GameMessage, GameMessageType }

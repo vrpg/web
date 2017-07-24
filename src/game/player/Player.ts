@@ -1,8 +1,9 @@
 /// <reference path="../../references.ts" />
 
-import "babylon";
-import { EventSocket } from '../../communication/eventSocket';
-import { GameMessage, GameMessageType } from '../../communication/gameMessage';
+import "babylonjs";
+import { EventSocket } from '../../communication/EventSocket';
+import { GameMessage, GameMessageType } from '../../communication/GameMessage';
+import { ResourceManager } from '../ResourceManager';
 
 class Player {
     private readonly _mesh: BABYLON.Mesh;

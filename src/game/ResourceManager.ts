@@ -11,3 +11,5 @@ namespace ResourceManager {
         return this._manager;
     }
 }
+
+export { ResourceManager }

@@ -1,5 +1,5 @@
-import { GameMessage } from './gameMessage';
-import { EventListener } from './eventListener';
+import { GameMessage } from './GameMessage';
+import { EventListener } from './EventListener';
 
 class EventSocket {
     private _socket: WebSocket;
