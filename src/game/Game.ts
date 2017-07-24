@@ -20,7 +20,7 @@ class Game implements EventListener {
         // Create canvas and engine
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
-        this._eventSocket = new EventSocket("wss://vr-rpg-server.herokuapp.com/test");
+        this._eventSocket = new EventSocket();
         this._eventSocket.addEventListener(this);
         this._players = [];
     }
@@ -36,7 +36,7 @@ class Game implements EventListener {
 
         let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
         ground.material = groundMaterial;
-        var imageTask = ResourceManager.getManager().addTextureTask('ground texture', "https://vr-rpg-server.herokuapp.com/resources/grass.jpg");
+        var imageTask = ResourceManager.addTextureTask('ground texture', "grass.jpg");
         imageTask.onSuccess = function (task) {
             groundMaterial.ambientTexture = task.texture;
         }
@@ -91,7 +91,7 @@ class Game implements EventListener {
         window.addEventListener('resize', () => {
             this._engine.resize();
         });
-        ResourceManager.getManager().load();
+        ResourceManager.load();
 
         window.addEventListener('keydown', (event) => {
             switch (event.code) {

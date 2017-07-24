@@ -20,7 +20,7 @@ class Player {
 
         let material = new BABYLON.StandardMaterial(name + "Texture", scene);
         this._mesh.material = material;
-        var imageTask = ResourceManager.getManager().addTextureTask('ground texture', "https://vr-rpg-server.herokuapp.com/resources/box.jpg");
+        var imageTask = ResourceManager.addTextureTask('player texture', "box.jpg");
         imageTask.onSuccess = function (task) {
             material.ambientTexture = task.texture;
         }
