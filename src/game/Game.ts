@@ -1,6 +1,5 @@
 /// <reference path="../references.ts" />
 
-import 'babylonjs';
 import { Player } from "./player/Player";
 import { EventSocket } from '../communication/EventSocket';
 import { EventListener } from '../communication/EventListener';
@@ -21,7 +20,7 @@ class Game implements EventListener {
         // Create canvas and engine
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
-        this._eventSocket = new EventSocket("wss://vr-rpg-server.herokuapp.com/test");
+        this._eventSocket = new EventSocket();
         this._eventSocket.addEventListener(this);
         this._players = [];
     }
@@ -37,7 +36,7 @@ class Game implements EventListener {
 
         let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
         ground.material = groundMaterial;
-        var imageTask = ResourceManager.getManager().addTextureTask('ground texture', "https://vr-rpg-server.herokuapp.com/resources/grass.jpg");
+        var imageTask = ResourceManager.addTextureTask('ground texture', "grass.jpg");
         imageTask.onSuccess = function (task) {
             groundMaterial.ambientTexture = task.texture;
         }
@@ -48,6 +47,41 @@ class Game implements EventListener {
             this._eventSocket.sendEvent(new GameMessage(GameMessageType.JOIN, this._player._playerId, { x: position.x, y: position.y, z: position.z }));
             this._eventSocket.sendEvent(new GameMessage(GameMessageType.GET_STATE, this._player._playerId, {}));
         });
+
+        this.createGUI();
+    }
+
+    createGUI(): void {
+        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+
+        var rect1 = new BABYLON.GUI.Rectangle();
+        rect1.width = "400px";
+        rect1.height = "400px";
+        rect1.cornerRadius = 20;
+        rect1.color = "Orange";
+        rect1.thickness = 4;
+        rect1.background = "green";
+        advancedTexture.addControl(rect1);
+
+        var text = new BABYLON.GUI.TextBlock();
+        text.top = "-40px";
+        text.text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur non augue et nisi porttitor pretium.";
+        text.textWrapping = true;
+        text.color = "white";
+        text.fontSize = 24;
+        rect1.addControl(text);
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("button", "Close!"); button.width = "150px";
+        button.height = "40px";
+        button.color = "white";
+        button.top = "40px";
+        button.background = "green";
+        button.onPointerDownObservable.add(function () {
+            advancedTexture.removeControl(rect1);
+        });
+        rect1.addControl(button);
+
+        advancedTexture.addControl(rect1);
     }
 
     animate(): void {
@@ -57,7 +91,7 @@ class Game implements EventListener {
         window.addEventListener('resize', () => {
             this._engine.resize();
         });
-        ResourceManager.getManager().load();
+        ResourceManager.load();
 
         window.addEventListener('keydown', (event) => {
             switch (event.code) {

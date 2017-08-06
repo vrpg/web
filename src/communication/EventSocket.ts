@@ -7,7 +7,8 @@ class EventSocket {
     private _isConnected: boolean;
     private _opOpenCallback: () => void;
 
-    constructor(url: string) {
+    constructor() {
+        var url: string = WEBSOCKET_URL + "/test";
         this._socket = new WebSocket(url);
         this._listeners = [];
         this._isConnected = false;

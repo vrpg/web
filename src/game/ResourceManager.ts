@@ -7,8 +7,13 @@ namespace ResourceManager {
         this._manager = new BABYLON.AssetsManager(scene);
     }
 
-    export function getManager(): BABYLON.AssetsManager {
-        return this._manager;
+    export function addTextureTask(name: string, requestedObject: string): BABYLON.ITextureAssetTask {
+        let requestUrl = API_URL + "/resources/" + requestedObject;
+        return this._manager.addTextureTask(name, requestUrl);
+    }
+
+    export function load(): void {
+        this._manager.load();
     }
 }
 
