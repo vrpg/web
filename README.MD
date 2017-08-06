@@ -6,8 +6,6 @@ VR-RPG-Client is the client side of the VR-RPG project
 #How to start development#
 - Visual Studio Code is used as an IDE (https://code.visualstudio.com/)
 
-- [optional] Bower extension in the VS Code
-
 - Installation
 
   1.  install npm
