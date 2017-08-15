@@ -6,15 +6,16 @@
 image: node:6.9.4
 
 pipelines:
-  master:
-    - step:
-        caches:
-          - node
-        script:
-          - npm install
-          - npm run build:prod
-          - npm install -g firebase-tools
-          - firebase deploy --token "$FIREBASE_API_TOKEN"
+  branches:
+    master:
+      - step:
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run build:prod
+            - npm install -g firebase-tools
+            - firebase deploy --token "$FIREBASE_API_TOKEN"
   default:
     - step:
         caches:
