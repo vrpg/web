@@ -48,7 +48,12 @@ class Game implements EventListener {
             this._eventSocket.sendEvent(new GameMessage(GameMessageType.GET_STATE, this._player._playerId, {}));
         });
 
-        this.createGUI();
+        let meshTask = ResourceManager.addMeshTask("test.obj");
+        meshTask.onSuccess = function (task: BABYLON.MeshAssetTask) {
+            console.log(task.loadedMeshes);
+        }
+
+        //this.createGUI();
     }
 
     createGUI(): void {

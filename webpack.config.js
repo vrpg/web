@@ -29,6 +29,7 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: 'node_modules/babylonjs/dist/preview release/babylon.js', to: 'lib' },
             { from: 'node_modules/babylonjs/dist/preview release/gui/babylon.gui.js', to: 'lib' },
+            { from: 'node_modules/babylonjs/dist/preview release/loaders/babylon.objFileLoader.min.js', to: 'lib' },
             { from: 'index.html', to: '' }
         ]),
         new webpack.DefinePlugin({
