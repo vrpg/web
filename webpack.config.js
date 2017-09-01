@@ -12,6 +12,11 @@ var WEBSOCKET_URL = {
     development: JSON.stringify("ws://localhost:8080"),
 }
 
+var SENTRY_DSN = {
+    production: JSON.stringify("https://46582dadec6449f0b0ff2e54dcd8879a@sentry.io/211461"),
+    development: null,
+}
+
 var environment = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 module.exports = {
@@ -30,11 +35,13 @@ module.exports = {
             { from: 'node_modules/babylonjs/dist/preview release/babylon.js', to: 'lib' },
             { from: 'node_modules/babylonjs/dist/preview release/gui/babylon.gui.js', to: 'lib' },
             { from: 'node_modules/babylonjs/dist/preview release/loaders/babylon.objFileLoader.min.js', to: 'lib' },
+            { from: 'node_modules/raven-js/dist/raven.min.js', to: 'lib' },
             { from: 'index.html', to: '' }
         ]),
         new webpack.DefinePlugin({
             'API_URL': API_URL[environment],
-            'WEBSOCKET_URL': WEBSOCKET_URL[environment]
+            'WEBSOCKET_URL': WEBSOCKET_URL[environment],
+            'SENTRY_DSN': SENTRY_DSN[environment]
         })
     ],
 
@@ -58,5 +65,6 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
+        "raven-js": "Raven"
     },
 };
