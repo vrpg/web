@@ -8,13 +8,14 @@
   "devDependencies": {
     "awesome-typescript-loader": "^3.2.1",
     "copy-webpack-plugin": "^4.0.1",
+    "cross-env": "^5.0.5",
     "source-map-loader": "^0.2.1",
     "typescript": "^2.4.1",
     "webpack": "^3.2.0"
   },
   "scripts": {
-    "build:dev": "NODE_ENV=development webpack",
-    "build:prod": "NODE_ENV=production webpack"
+    "build:dev": "cross-env NODE_ENV=development webpack",
+    "build:prod": "cross-env NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",
