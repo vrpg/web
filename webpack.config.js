@@ -36,6 +36,7 @@ module.exports = {
             { from: 'node_modules/babylonjs/dist/preview release/gui/babylon.gui.js', to: 'lib' },
             { from: 'node_modules/babylonjs/dist/preview release/loaders/babylon.objFileLoader.min.js', to: 'lib' },
             { from: 'node_modules/raven-js/dist/raven.min.js', to: 'lib' },
+            { from: 'node_modules/protobufjs/dist/minimal/protobuf.js', to: 'lib' },
             { from: 'index.html', to: '' }
         ]),
         new webpack.DefinePlugin({

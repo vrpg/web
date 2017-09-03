@@ -1,4 +1,4 @@
-import { GameMessage } from './GameMessage';
+import { GameMessage } from '../proto/compiled';
 
 interface EventListener {
     onEvent(event: GameMessage): void;
