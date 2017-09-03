@@ -45,10 +45,6 @@ class Game implements EventListener {
         this._player = new Player("player-" + UUID.generateUUID(), new BABYLON.Vector3(0, 0.5, 0), this._scene, this._eventSocket, "camera1");
         let position: BABYLON.Vector3 = this._player.getPlayer().position;
 
-        const $root = $protobuf.roots["default"];
-        console.log(GameMessageType);
-        console.log(GameMessageType.JOIN);
-
         this._eventSocket.onOpen(() => {
             let joinMessage = new GameMessage({
                 eventType: GameMessageType.JOIN,

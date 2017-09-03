@@ -18,7 +18,7 @@
   "scripts": {
     "build:dev": "cross-env NODE_ENV=development webpack",
     "build:prod": "cross-env NODE_ENV=production webpack",
-    "pbjs": "pbjs -t static-module -w es6 -o src/proto/compiled.js proto/**/*.proto",
+    "pbjs": "pbjs -t static-module -o src/proto/compiled.js proto/**/*.proto",
     "pbts": "pbts -o src/proto/compiled.d.ts src/proto/compiled.js"
   },
   "repository": {
