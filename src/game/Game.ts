@@ -1,9 +1,10 @@
 /// <reference path="../references.ts" />
 
+import * as $protobuf from "protobufjs";
+import { GameMessage, GameMessageType } from "../proto/compiled";
 import { Player } from "./player/Player";
 import { EventSocket } from '../communication/EventSocket';
 import { EventListener } from '../communication/EventListener';
-import { GameMessage, GameMessageType } from '../communication/GameMessage';
 import { UUID } from '../util/uuid';
 import { ResourceManager } from './ResourceManager';
 
@@ -43,9 +44,21 @@ class Game implements EventListener {
 
         this._player = new Player("player-" + UUID.generateUUID(), new BABYLON.Vector3(0, 0.5, 0), this._scene, this._eventSocket, "camera1");
         let position: BABYLON.Vector3 = this._player.getPlayer().position;
+
         this._eventSocket.onOpen(() => {
-            this._eventSocket.sendEvent(new GameMessage(GameMessageType.JOIN, this._player._playerId, { x: position.x, y: position.y, z: position.z }));
-            this._eventSocket.sendEvent(new GameMessage(GameMessageType.GET_STATE, this._player._playerId, {}));
+            let joinMessage = new GameMessage({
+                eventType: GameMessageType.JOIN,
+                eventSource: this._player._playerId,
+                eventContent: { 'x': position.x + "", 'y': position.y + "", 'z': position.z + "" }
+            });
+            this._eventSocket.sendEvent(joinMessage);
+
+            let getStateMessage = new GameMessage({
+                eventType: GameMessageType.GET_STATE,
+                eventSource: this._player._playerId,
+                eventContent: {}
+            });
+            this._eventSocket.sendEvent(getStateMessage);
         });
 
         let meshTask = ResourceManager.addMeshTask("test.obj");
@@ -125,11 +138,11 @@ class Game implements EventListener {
     }
 
     onEvent(event: GameMessage): void {
-        let content = event._eventContent;
-        let source: string = event._eventSource;
-        switch (event._eventName) {
+        let content = event.eventContent;
+        let source: string = event.eventSource;
+        switch (event.eventType) {
             case GameMessageType.JOIN:
-                this._players.push(new Player(source, new BABYLON.Vector3(content.x, content.y, content.z), this._scene));
+                this._players.push(new Player(source, new BABYLON.Vector3(Number(content.x), Number(content.y), Number(content.z)), this._scene));
                 break;
             case GameMessageType.STATE:
                 let found: boolean;
@@ -139,15 +152,15 @@ class Game implements EventListener {
                     }
                 }
                 if (!found) {
-                    this._players.push(new Player(source, new BABYLON.Vector3(content.x, content.y, content.z), this._scene));
+                    this._players.push(new Player(source, new BABYLON.Vector3(Number(content.x), Number(content.y), Number(content.z)), this._scene));
                 }
             case GameMessageType.MOVE:
                 this._players.forEach(p => {
                     if (p._playerId === source) {
                         let mesh: BABYLON.Mesh = p.getPlayer();
-                        mesh.position.x = content.x;
-                        mesh.position.y = content.y;
-                        mesh.position.z = content.z;
+                        mesh.position.x = Number(content.x);
+                        mesh.position.y = Number(content.y);
+                        mesh.position.z = Number(content.z);
                     }
                 });
                 break;
@@ -166,10 +179,17 @@ class Game implements EventListener {
                 break;
             case GameMessageType.GET_STATE:
                 let pos: BABYLON.Vector3 = this._player.getPlayer().position;
-                this._eventSocket.sendEvent(new GameMessage(GameMessageType.STATE, this._player._playerId, { x: pos.x, y: pos.y, z: pos.z }));
+
+                let gameMessage = new GameMessage({
+                    eventType: GameMessageType.STATE,
+                    eventSource: this._player._playerId,
+                    eventContent: { 'x': pos.x + "", 'y': pos.y + "", 'z': pos.z + "" }
+                });
+
+                this._eventSocket.sendEvent(gameMessage);
                 break;
             default:
-                console.warn("unexpected eventName: " + event._eventName);
+                console.warn("unexpected eventName: " + event.eventType);
         }
     }
 }

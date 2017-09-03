@@ -1,4 +1,5 @@
-import { GameMessage } from './GameMessage';
+/// <reference path="../references.ts" />
+import { GameMessage } from "../proto/compiled";
 import { EventListener } from './EventListener';
 
 class EventSocket {
@@ -29,8 +30,10 @@ class EventSocket {
             console.log("onmessage: " + onMessageEvent);
 
             let json = JSON.parse(onMessageEvent.data);
-            var gameEvent = new GameMessage(json.eventName, json.eventSource, json.eventContent);
-            this.notifyListeners(gameEvent);
+
+            let gameMessage = GameMessage.fromObject(json);
+
+            this.notifyListeners(gameMessage);
         }
     }
 
@@ -43,12 +46,8 @@ class EventSocket {
             console.warn("Not connected!");
             return;
         }
-        var message = {
-            eventName: event._eventName,
-            eventSource: event._eventSource,
-            eventContent: event._eventContent
-        };
-        this._socket.send(JSON.stringify(message));
+
+        this._socket.send(JSON.stringify(event.toJSON()));
     }
 
     private notifyListeners(event: GameMessage): void {
