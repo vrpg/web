@@ -46,7 +46,9 @@
          * @interface IGameMessage
          * @property {GameMessageType} [eventType] GameMessage eventType
          * @property {string} [eventSource] GameMessage eventSource
-         * @property {Object.<string,string>} [eventContent] GameMessage eventContent
+         * @property {number} [x] GameMessage x
+         * @property {number} [y] GameMessage y
+         * @property {number} [z] GameMessage z
          */
     
         /**
@@ -57,7 +59,6 @@
          * @param {IGameMessage=} [properties] Properties to set
          */
         function GameMessage(properties) {
-            this.eventContent = {};
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -81,12 +82,28 @@
         GameMessage.prototype.eventSource = "";
     
         /**
-         * GameMessage eventContent.
-         * @member {Object.<string,string>}eventContent
+         * GameMessage x.
+         * @member {number}x
          * @memberof GameMessage
          * @instance
          */
-        GameMessage.prototype.eventContent = $util.emptyObject;
+        GameMessage.prototype.x = 0;
+    
+        /**
+         * GameMessage y.
+         * @member {number}y
+         * @memberof GameMessage
+         * @instance
+         */
+        GameMessage.prototype.y = 0;
+    
+        /**
+         * GameMessage z.
+         * @member {number}z
+         * @memberof GameMessage
+         * @instance
+         */
+        GameMessage.prototype.z = 0;
     
         /**
          * Creates a new GameMessage instance using the specified properties.
@@ -116,9 +133,12 @@
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.eventType);
             if (message.eventSource != null && message.hasOwnProperty("eventSource"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.eventSource);
-            if (message.eventContent != null && message.hasOwnProperty("eventContent"))
-                for (var keys = Object.keys(message.eventContent), i = 0; i < keys.length; ++i)
-                    writer.uint32(/* id 3, wireType 2 =*/26).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.eventContent[keys[i]]).ldelim();
+            if (message.x != null && message.hasOwnProperty("x"))
+                writer.uint32(/* id 3, wireType 1 =*/25).double(message.x);
+            if (message.y != null && message.hasOwnProperty("y"))
+                writer.uint32(/* id 4, wireType 1 =*/33).double(message.y);
+            if (message.z != null && message.hasOwnProperty("z"))
+                writer.uint32(/* id 5, wireType 1 =*/41).double(message.z);
             return writer;
         };
     
@@ -149,7 +169,7 @@
         GameMessage.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.GameMessage(), key;
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.GameMessage();
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
@@ -160,12 +180,13 @@
                     message.eventSource = reader.string();
                     break;
                 case 3:
-                    reader.skip().pos++;
-                    if (message.eventContent === $util.emptyObject)
-                        message.eventContent = {};
-                    key = reader.string();
-                    reader.pos++;
-                    message.eventContent[key] = reader.string();
+                    message.x = reader.double();
+                    break;
+                case 4:
+                    message.y = reader.double();
+                    break;
+                case 5:
+                    message.z = reader.double();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -217,14 +238,15 @@
             if (message.eventSource != null && message.hasOwnProperty("eventSource"))
                 if (!$util.isString(message.eventSource))
                     return "eventSource: string expected";
-            if (message.eventContent != null && message.hasOwnProperty("eventContent")) {
-                if (!$util.isObject(message.eventContent))
-                    return "eventContent: object expected";
-                var key = Object.keys(message.eventContent);
-                for (var i = 0; i < key.length; ++i)
-                    if (!$util.isString(message.eventContent[key[i]]))
-                        return "eventContent: string{k:string} expected";
-            }
+            if (message.x != null && message.hasOwnProperty("x"))
+                if (typeof message.x !== "number")
+                    return "x: number expected";
+            if (message.y != null && message.hasOwnProperty("y"))
+                if (typeof message.y !== "number")
+                    return "y: number expected";
+            if (message.z != null && message.hasOwnProperty("z"))
+                if (typeof message.z !== "number")
+                    return "z: number expected";
             return null;
         };
     
@@ -268,13 +290,12 @@
             }
             if (object.eventSource != null)
                 message.eventSource = String(object.eventSource);
-            if (object.eventContent) {
-                if (typeof object.eventContent !== "object")
-                    throw TypeError(".GameMessage.eventContent: object expected");
-                message.eventContent = {};
-                for (var keys = Object.keys(object.eventContent), i = 0; i < keys.length; ++i)
-                    message.eventContent[keys[i]] = String(object.eventContent[keys[i]]);
-            }
+            if (object.x != null)
+                message.x = Number(object.x);
+            if (object.y != null)
+                message.y = Number(object.y);
+            if (object.z != null)
+                message.z = Number(object.z);
             return message;
         };
     
@@ -291,22 +312,23 @@
             if (!options)
                 options = {};
             var object = {};
-            if (options.objects || options.defaults)
-                object.eventContent = {};
             if (options.defaults) {
                 object.eventType = options.enums === String ? "UNKNOWN" : 0;
                 object.eventSource = "";
+                object.x = 0;
+                object.y = 0;
+                object.z = 0;
             }
             if (message.eventType != null && message.hasOwnProperty("eventType"))
                 object.eventType = options.enums === String ? $root.GameMessageType[message.eventType] : message.eventType;
             if (message.eventSource != null && message.hasOwnProperty("eventSource"))
                 object.eventSource = message.eventSource;
-            var keys2;
-            if (message.eventContent && (keys2 = Object.keys(message.eventContent)).length) {
-                object.eventContent = {};
-                for (var j = 0; j < keys2.length; ++j)
-                    object.eventContent[keys2[j]] = message.eventContent[keys2[j]];
-            }
+            if (message.x != null && message.hasOwnProperty("x"))
+                object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
+            if (message.y != null && message.hasOwnProperty("y"))
+                object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
+            if (message.z != null && message.hasOwnProperty("z"))
+                object.z = options.json && !isFinite(message.z) ? String(message.z) : message.z;
             return object;
         };
     

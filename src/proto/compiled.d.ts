@@ -19,8 +19,14 @@ export interface IGameMessage {
     /** GameMessage eventSource */
     eventSource?: string;
 
-    /** GameMessage eventContent */
-    eventContent?: { [k: string]: string };
+    /** GameMessage x */
+    x?: number;
+
+    /** GameMessage y */
+    y?: number;
+
+    /** GameMessage z */
+    z?: number;
 }
 
 /** Represents a GameMessage. */
@@ -38,8 +44,14 @@ export class GameMessage {
     /** GameMessage eventSource. */
     public eventSource: string;
 
-    /** GameMessage eventContent. */
-    public eventContent: { [k: string]: string };
+    /** GameMessage x. */
+    public x: number;
+
+    /** GameMessage y. */
+    public y: number;
+
+    /** GameMessage z. */
+    public z: number;
 
     /**
      * Creates a new GameMessage instance using the specified properties.

@@ -63,12 +63,13 @@ class Player {
     private sendMoveEvent(): void {
         if (this._eventSocket) {
             let pos: BABYLON.Vector3 = this._mesh.position;
-            let content = { 'x': pos.x + "", 'y': pos.y + "", 'z': pos.z + "" };
 
             let gameMessage = new GameMessage({
                 eventSource: this._playerId,
                 eventType: GameMessageType.MOVE,
-                eventContent: content
+                x: pos.x,
+                y: pos.y,
+                z: pos.z,
             });
 
             this._eventSocket.sendEvent(gameMessage);

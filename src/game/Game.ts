@@ -49,14 +49,15 @@ class Game implements EventListener {
             let joinMessage = new GameMessage({
                 eventType: GameMessageType.JOIN,
                 eventSource: this._player._playerId,
-                eventContent: { 'x': position.x + "", 'y': position.y + "", 'z': position.z + "" }
+                x: position.x,
+                y: position.y,
+                z: position.z
             });
             this._eventSocket.sendEvent(joinMessage);
 
             let getStateMessage = new GameMessage({
                 eventType: GameMessageType.GET_STATE,
-                eventSource: this._player._playerId,
-                eventContent: {}
+                eventSource: this._player._playerId
             });
             this._eventSocket.sendEvent(getStateMessage);
         });
@@ -138,11 +139,10 @@ class Game implements EventListener {
     }
 
     onEvent(event: GameMessage): void {
-        let content = event.eventContent;
         let source: string = event.eventSource;
         switch (event.eventType) {
             case GameMessageType.JOIN:
-                this._players.push(new Player(source, new BABYLON.Vector3(Number(content.x), Number(content.y), Number(content.z)), this._scene));
+                this._players.push(new Player(source, new BABYLON.Vector3(Number(event.x), Number(event.y), Number(event.z)), this._scene));
                 break;
             case GameMessageType.STATE:
                 let found: boolean;
@@ -152,15 +152,15 @@ class Game implements EventListener {
                     }
                 }
                 if (!found) {
-                    this._players.push(new Player(source, new BABYLON.Vector3(Number(content.x), Number(content.y), Number(content.z)), this._scene));
+                    this._players.push(new Player(source, new BABYLON.Vector3(event.x, event.y, event.z), this._scene));
                 }
             case GameMessageType.MOVE:
                 this._players.forEach(p => {
                     if (p._playerId === source) {
                         let mesh: BABYLON.Mesh = p.getPlayer();
-                        mesh.position.x = Number(content.x);
-                        mesh.position.y = Number(content.y);
-                        mesh.position.z = Number(content.z);
+                        mesh.position.x = event.x;
+                        mesh.position.y = event.y;
+                        mesh.position.z = event.z;
                     }
                 });
                 break;
@@ -183,7 +183,9 @@ class Game implements EventListener {
                 let gameMessage = new GameMessage({
                     eventType: GameMessageType.STATE,
                     eventSource: this._player._playerId,
-                    eventContent: { 'x': pos.x + "", 'y': pos.y + "", 'z': pos.z + "" }
+                    x: pos.x,
+                    y: pos.y,
+                    z: pos.z
                 });
 
                 this._eventSocket.sendEvent(gameMessage);
