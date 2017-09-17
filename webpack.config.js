@@ -20,7 +20,7 @@ var SENTRY_DSN = {
 var environment = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 module.exports = {
-    entry: "./src/index.ts",
+    entry: "./src/index",
     output: {
         filename: "bundle.js",
         path: __dirname + "/dist"
@@ -37,6 +37,10 @@ module.exports = {
             { from: 'node_modules/babylonjs/dist/preview release/loaders/babylon.objFileLoader.min.js', to: 'lib' },
             { from: 'node_modules/raven-js/dist/raven.min.js', to: 'lib' },
             { from: 'node_modules/protobufjs/dist/minimal/protobuf.js', to: 'lib' },
+            { from: 'node_modules/react/dist/react.js', to: 'lib' },
+            { from: 'node_modules/react-dom/dist/react-dom.js', to: 'lib' },
+            { from: 'node_modules/react-router/umd/react-router.js', to: 'lib' },
+            { from: 'node_modules/react-router-dom/umd/react-router-dom.js', to: 'lib' },
             { from: 'index.html', to: '' }
         ]),
         new webpack.DefinePlugin({
@@ -48,11 +52,13 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json", ".jsx"]
     },
 
     module: {
         rules: [
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015&presets[]=react' },
+
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
 
@@ -66,6 +72,9 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
-        "raven-js": "Raven"
+        "raven-js": "Raven",
+        "react": "React",
+        "react-dom": "ReactDOM",
+        "react-router": "ReactRouter"
     },
 };
