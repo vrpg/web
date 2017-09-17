@@ -1,4 +1,4 @@
-import * as Raven from 'raven-js';
+import Raven from 'raven-js';
 import { render } from "react-dom";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { Login } from "./react/login";
