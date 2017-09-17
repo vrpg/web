@@ -34,7 +34,8 @@
     "build:prod": "cross-env NODE_ENV=production webpack",
     "pbjs": "pbjs -t static-module -o src/proto/compiled.js proto/**/*.proto",
     "pbts": "pbts -o src/proto/compiled.d.ts src/proto/compiled.js",
-    "start": "webpack-dev-server --inline --content-base ."
+    "start:dev": "cross-env NODE_ENV=development webpack-dev-server --port 9000 --inline --content-base .",
+    "start:prod": "cross-env NODE_ENV=production webpack-dev-server --port 9000 --inline --content-base ."
   },
   "repository": {
     "type": "git",
