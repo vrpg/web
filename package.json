@@ -8,6 +8,7 @@
     "@types/react-router": "^4.0.15",
     "@types/react-router-dom": "^4.0.7",
     "babylonjs": "^3.0.7",
+    "classnames": "^2.2.5",
     "protobufjs": "^6.8.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
