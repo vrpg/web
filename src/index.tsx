@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as Raven from 'raven-js';
 import { render } from "react-dom";
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Login } from "./react/login";
 import { Lobby } from "./react/lobby";
 import { Register } from "./react/register";
