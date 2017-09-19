@@ -1,5 +1,5 @@
 /// <reference path="../references.ts" />
-import { GameMessage } from "../proto/compiled";
+import { SocketGameMessage as GameMessage } from "../proto/compiled";
 import { EventListener } from './EventListener';
 
 class EventSocket {

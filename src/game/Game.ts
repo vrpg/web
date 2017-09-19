@@ -1,7 +1,7 @@
 /// <reference path="../references.ts" />
 
 import * as $protobuf from "protobufjs";
-import { GameMessage, GameMessageType } from "../proto/compiled";
+import { SocketGameMessage as GameMessage, SocketGameMessageType as GameMessageType } from "../proto/compiled";
 import { Player } from "./player/Player";
 import { EventSocket } from '../communication/EventSocket';
 import { EventListener } from '../communication/EventListener';
