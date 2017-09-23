@@ -3,9 +3,9 @@ import * as Raven from 'raven-js';
 import { render } from "react-dom";
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Login } from "./react/login";
-import { Lobby } from "./react/lobby";
-import { Register } from "./react/register";
-import { GameComponent as Game } from "./react/game";
+import { Lobby,LOBBY_PATH } from "./react/lobby";
+import { Register,REGISTER_PATH } from "./react/register";
+import { GameComponent as Game, GAME_PATH } from "./react/game";
 
 if (SENTRY_DSN) {
     Raven.config(SENTRY_DSN).install();
@@ -21,9 +21,9 @@ render((
     <Router>
         <div style={fullScreen}>
             <Route exact path="/" component={Login} />
-            <Route path="/game" component={Game} />
-            <Route path="/lobby" component={Lobby} />
-            <Route path="/register" component={Register} />
+            <Route path={GAME_PATH} component={Game} />
+            <Route path={LOBBY_PATH} component={Lobby} />
+            <Route path={REGISTER_PATH} component={Register} />
         </div>
     </Router>
 ), document.getElementById("root"))

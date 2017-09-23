@@ -21,6 +21,8 @@ const buttonAreaStyle: React.CSSProperties = {
 
 export interface RegisterState { username: string; password: string }
 
+export const REGISTER_PATH:string = '/register'
+
 class Register extends React.Component<undefined, RegisterState> {
     constructor(props: any) {
         super(props);
