@@ -12,9 +12,6 @@ module.exports = {
     entry: {
         app: [
             paths.src('index.tsx'),
-            'react-hot-loader/patch',
-            'webpack-dev-server/client?http://localhost:3000',
-            'webpack/hot/only-dev-server'
         ]
     },
     output: {
@@ -24,7 +21,6 @@ module.exports = {
 
     context: path.base,
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin(config.globals),
