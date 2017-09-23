@@ -1,6 +1,6 @@
 /// <reference path="../../references.ts" />
 
-import "babylonjs";
+import * as BABYLON from 'babylonjs'
 import { EventSocket } from '../../communication/EventSocket';
 import { SocketGameMessage as GameMessage, SocketGameMessageType as GameMessageType } from "../../proto/compiled";
 import { ResourceManager } from '../ResourceManager';

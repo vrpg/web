@@ -7,6 +7,8 @@ import { EventSocket } from '../communication/EventSocket';
 import { EventListener } from '../communication/EventListener';
 import { UUID } from '../util/uuid';
 import { ResourceManager } from './ResourceManager';
+import * as BABYLON from 'babylonjs'
+import * as GUI from 'babylonjs-gui'
 
 class Game implements EventListener {
     private readonly _canvas: HTMLCanvasElement;
@@ -35,7 +37,7 @@ class Game implements EventListener {
         let ground = BABYLON.MeshBuilder.CreateGround('ground1',
             { width: 10, height: 10, subdivisions: 2 }, this._scene);
 
-        let groundMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
+        let groundMaterial: BABYLON.StandardMaterial = new BABYLON.StandardMaterial("groundTexture", this._scene);
         ground.material = groundMaterial;
         var imageTask = ResourceManager.addTextureTask('ground texture', "grass.jpg");
         imageTask.onSuccess = function (task) {
@@ -71,9 +73,9 @@ class Game implements EventListener {
     }
 
     createGUI(): void {
-        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+        var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-        var rect1 = new BABYLON.GUI.Rectangle();
+        var rect1 = new GUI.Rectangle();
         rect1.width = "400px";
         rect1.height = "400px";
         rect1.cornerRadius = 20;
@@ -82,7 +84,7 @@ class Game implements EventListener {
         rect1.background = "green";
         advancedTexture.addControl(rect1);
 
-        var text = new BABYLON.GUI.TextBlock();
+        var text = new GUI.TextBlock();
         text.top = "-40px";
         text.text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur non augue et nisi porttitor pretium.";
         text.textWrapping = true;
@@ -90,7 +92,7 @@ class Game implements EventListener {
         text.fontSize = 24;
         rect1.addControl(text);
 
-        var button = BABYLON.GUI.Button.CreateSimpleButton("button", "Close!"); button.width = "150px";
+        var button = GUI.Button.CreateSimpleButton("button", "Close!"); button.width = "150px";
         button.height = "40px";
         button.color = "white";
         button.top = "40px";

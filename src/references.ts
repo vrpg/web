@@ -1,5 +1,3 @@
-///<reference path="../node_modules/babylonjs/dist/preview release/babylon.d.ts" />
-///<reference path="../node_modules/babylonjs/dist/preview release/gui/babylon.gui.d.ts" />
 ///<reference path="../node_modules/raven-js/typescript/raven.d.ts" />
 ///<reference path="../node_modules/@types/react/index.d.ts" />
 ///<reference path="../node_modules/@types/react-dom/index.d.ts" />

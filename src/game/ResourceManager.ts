@@ -1,5 +1,6 @@
-/// <reference path="../references.ts" />
 import { UUID } from '../util/uuid';
+import * as BABYLON from 'babylonjs'
+import 'babylonjs-loaders'
 
 namespace ResourceManager {
     var _manager: BABYLON.AssetsManager;

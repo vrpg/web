@@ -26,4 +26,4 @@ render((
             <Route path="/register" component={Register} />
         </div>
     </Router>
-), document.getElementById('app'))
+), document.getElementById("root"))

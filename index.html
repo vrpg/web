@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <title>VR-RPG</title>
 </head>
+
 <style>
     html,
     body {
@@ -15,7 +16,8 @@
         padding: 0;
     }
 
-    #app, #game {
+    #root,
+    #game {
         width: 100%;
         height: 100%;
     }
@@ -28,22 +30,8 @@
 </style>
 
 <body>
-    <div id="app"></div>
-    <!-- <canvas id="renderCanvas"></canvas> -->
-
-    <!-- Dependencies -->
-    <script src="./lib/babylon.js"></script>
-    <script src="./lib/babylon.gui.js"></script>
-    <script src="./lib/babylon.objFileLoader.min.js"></script>
-    <script src="./lib/raven.min.js"></script>
-    <script src="./lib/protobuf.js"></script>
-    <script src="./lib/react.js"></script>
-    <script src="./lib/react-dom.js"></script>
-    <script src="./lib/react-router.js"></script>
-    <script src="./lib/react-router-dom.js"></script>
-
-    <!-- Main -->
-    <script src="./bundle.js"></script>
+    <div id="root" />
+    <noscript>Enable JavaScripts!</noscript>
 </body>
 
 </html>

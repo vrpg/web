@@ -13,7 +13,7 @@ VR-RPG-Client is the client side of the VR-RPG project
 - Run the following commands (inside terminal) in the project folder in the following order:
 
   1.  npm install
-  2.  npm run start:dev (for development, running server is needed locally)
+  2.  npm run start (for development, running server is needed locally)
   3.  [optional] npm run start:prod (after this the project can be tested with remote server)
 
 - Compile protobuff
@@ -21,7 +21,7 @@ VR-RPG-Client is the client side of the VR-RPG project
   1. npm run pbjs
   2. npm run pbts
 
-- Now the project can be tested by opening http://localhost:9000/
+- Now the project can be tested by opening http://localhost:3000/
 
 Contact:
 gyorgy.bucsek@gmail.com
