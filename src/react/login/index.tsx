@@ -47,8 +47,6 @@ class Login extends React.Component<undefined, LoginState> {
 
     handleLogin(event?: any): boolean {
         console.log("login");
-        console.log(this.state.username);
-        console.log(this.state.password);
         return true;
     }
 
