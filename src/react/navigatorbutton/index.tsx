@@ -4,7 +4,7 @@ import { History } from 'history';
 
 export interface NavigatorButtonProps { title: string; to: string; onClick: (event: any) => boolean }
 
-class NavigatorButton extends React.Component<NavigatorButtonProps, undefined> {
+export class NavigatorButton extends React.Component<NavigatorButtonProps, undefined> {
     constructor(props: any) {
         super(props);
     }
@@ -23,5 +23,3 @@ class NavigatorButton extends React.Component<NavigatorButtonProps, undefined> {
         )} />
     }
 }
-
-export { NavigatorButton }

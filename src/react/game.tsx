@@ -1,21 +1,33 @@
 import * as React from 'react';
 import { findDOMNode } from "react-dom";
 import { Game } from "../game/Game";
+import { UnAuthorized } from './unauthorized'
 
 export const GAME_PATH: string = '/game'
 
-class GameComponent extends React.Component {
+export interface GameComponentProps {
+    isAuthenticated: boolean;
+    errorMessage: string;
+}
+
+class GameComponent extends React.Component<GameComponentProps, undefined> {
     componentDidMount() {
-        let game = new Game('renderCanvas');
-        game.createScene();
-        game.animate();
+        if (document.getElementById('renderCanvas')) {
+            let game = new Game('renderCanvas');
+            game.createScene();
+            game.animate();
+        }
     }
     render() {
-        return (
-            <div id="game">
-                <canvas id="renderCanvas" />
-            </div>
-        );
+        if (this.props.isAuthenticated) {
+            return (
+                <div id="game">
+                    <canvas id="renderCanvas" />
+                </div>
+            );
+        } else {
+            return <UnAuthorized errormessage={this.props.errorMessage} />
+        }
     }
 }
 

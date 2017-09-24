@@ -1,5 +1,10 @@
 import * as React from 'react';
 import { NavigatorButton } from '../navigatorbutton';
+import { Dispatch } from 'redux'
+import { connect } from 'react-redux'
+import { loginUser } from '../../actions'
+import { LOBBY_PATH } from '../lobby'
+import { REGISTER_PATH } from '../register'
 
 const loginContainerStyle: React.CSSProperties = {
     margin: 'auto',
@@ -19,9 +24,17 @@ const buttonAreaStyle: React.CSSProperties = {
     justifyContent: 'space-evenly'
 };
 
-export interface LoginState { username: string; password: string }
+export interface LoginState { username: string; password: string; }
 
-class Login extends React.Component<undefined, LoginState> {
+export interface LoginProps {
+    dispatch: Dispatch<any>;
+    isAuthenticated: boolean;
+    errorMessage: string
+}
+
+export const LOGIN_PATH = "/";
+
+export class Login extends React.Component<LoginProps, LoginState> {
 
     constructor(props: any) {
         super(props);
@@ -46,7 +59,10 @@ class Login extends React.Component<undefined, LoginState> {
     }
 
     handleLogin(event?: any): boolean {
-        console.log("login");
+        this.props.dispatch(loginUser({
+            username: this.state.username,
+            password: this.state.password
+        }))
         return true;
     }
 
@@ -56,6 +72,7 @@ class Login extends React.Component<undefined, LoginState> {
     }
 
     render() {
+        console.log("during render " + this.props.isAuthenticated)
         return (
             <div className="login-container" style={loginContainerStyle}>
                 <div className="form-area">
@@ -69,12 +86,10 @@ class Login extends React.Component<undefined, LoginState> {
                     </div>
                 </div>
                 <div style={buttonAreaStyle}>
-                    <NavigatorButton title="Login" to="lobby" onClick={this.handleLogin} />
-                    <NavigatorButton title="Register" to="register" onClick={this.handleRegister} />
+                    <NavigatorButton title="Login" to={LOBBY_PATH} onClick={this.handleLogin} />
+                    <NavigatorButton title="Register" to={REGISTER_PATH} onClick={this.handleRegister} />
                 </div>
             </div>
         );
     }
 }
-
-export { Login }
