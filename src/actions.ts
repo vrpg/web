@@ -48,11 +48,7 @@ export function loginUser(creds: Creds) {
 
     let config: RequestInit = {
         method: 'POST',
-        /*headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },*/
         mode: 'cors',
-        //body: `username=${creds.username}&password=${creds.password}`
         body: formData
     }
 
@@ -60,7 +56,7 @@ export function loginUser(creds: Creds) {
         // We dispatch requestLogin to kickoff the call to the API
         dispatch(requestLogin(creds))
 
-        return fetch('http://localhost:8080/sessions/create', config)
+        return fetch(API_URL + '/login', config)
             .then(response => response.json()
                 .then(json => ({ json, response }))
             ).then(({ json, response }) => {

@@ -68,11 +68,11 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     handleRegister(event?: any): boolean {
         console.log("register");
+        //TODO not implemented yet
         return true;
     }
 
     render() {
-        console.log("during render " + this.props.isAuthenticated)
         return (
             <div className="login-container" style={loginContainerStyle}>
                 <div className="form-area">
