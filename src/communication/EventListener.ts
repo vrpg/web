@@ -1,4 +1,4 @@
-import { SocketGameMessage as GameMessage } from '../proto/compiled';
+import { SocketMessage as GameMessage } from '../proto/compiled';
 
 interface EventListener {
     onEvent(event: GameMessage): void;

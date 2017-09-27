@@ -2,7 +2,7 @@
 
 import * as BABYLON from 'babylonjs'
 import { EventSocket } from '../../communication/EventSocket';
-import { SocketGameMessage as GameMessage, SocketGameMessageType as GameMessageType } from "../../proto/compiled";
+import { SocketMessage as GameMessage, SocketMessageType as GameMessageType } from "../../proto/compiled";
 import { ResourceManager } from '../ResourceManager';
 
 class Player {
