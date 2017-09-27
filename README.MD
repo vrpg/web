@@ -1,4 +1,6 @@
-VR-RPG-Client is the client side of the VR-RPG project
+Web [![Build Status](https://travis-ci.org/vrpg/web.svg?branch=master)](https://travis-ci.org/vrpg/web)
+
+VRPG/Web is the client side of the VRPG project
 
 #Development requirements:#
 - nodeJS, npm (https://nodejs.org/en/)

@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+ - "8"
+
+cache:
+  directories:
+    - "node_modules"
+
+before_install:
+  - mkdir dist
+
+install:
+  - npm install
+  - npm run pbjs
+  - npm run pbts
+  - npm run build:prod
