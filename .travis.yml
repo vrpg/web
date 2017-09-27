@@ -6,9 +6,6 @@ cache:
   directories:
     - "node_modules"
 
-before_install:
-  - mkdir dist
-
 install:
   - npm install
   - npm run pbjs
