@@ -1,12 +1,12 @@
-Web [![Build Status](https://travis-ci.org/vrpg/web.svg?branch=master)](https://travis-ci.org/vrpg/web)
+# Web [![Build Status](https://travis-ci.org/vrpg/web.svg?branch=master)](https://travis-ci.org/vrpg/web)
 
 VRPG/Web is the client side of the VRPG project
 
-#Development requirements:#
+## Development requirements
 - nodeJS, npm (https://nodejs.org/en/)
 - Visual Studio Code is used as an IDE (https://code.visualstudio.com/)
 
-#How to start development#
+## How to start development
 - Installation
 
   1.  install npm
