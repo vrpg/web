@@ -7,6 +7,7 @@ import { GameComponent as Game, GAME_PATH } from "../react/game";
 import { Management, MANAGEMENT_PATH } from "../react/management"
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
+import { EDITOR_PATH, Editor } from "../react/editor";
 
 const fullScreen = {
     height: '100%',
@@ -52,6 +53,8 @@ export class App extends React.Component<AppProps, AppState> {
                     errorMessage={this.props.errorMessage} dispatch={this.props.dispatch} />} />
                 <Route path={REGISTER_PATH} component={Register} />
                 <Route path={MANAGEMENT_PATH} component={() => <Management isAuthenticated={this.props.isAuthenticated}
+                    errorMessage={this.props.errorMessage} dispatch={this.props.dispatch} />} />
+                <Route path={EDITOR_PATH} component={() => <Editor isAuthenticated={this.props.isAuthenticated}
                     errorMessage={this.props.errorMessage} dispatch={this.props.dispatch} />} />
             </div>
         </Router>
