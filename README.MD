@@ -1,5 +1,7 @@
 # Web [![Build Status](https://travis-ci.org/vrpg/web.svg?branch=master)](https://travis-ci.org/vrpg/web)
 
+!!! WORK IN PROGRESS !!!
+
 VRPG/Web is the client side of the VRPG project
 
 ## Development requirements
