@@ -10,7 +10,7 @@ export enum GameEditorMode {
 export class GameEditor implements Animatable {
     private readonly _engine: BABYLON.Engine
     private readonly _canvas: HTMLCanvasElement
-    private readonly _elevationControls: ElevationControl
+    private _elevationControls: ElevationControl
     private _scene: BABYLON.Scene
     private _editorMode: GameEditorMode
     private _camera: BABYLON.UniversalCamera
@@ -18,7 +18,6 @@ export class GameEditor implements Animatable {
     constructor(canvas: HTMLCanvasElement) {
         this._engine = new BABYLON.Engine(canvas, true)
         this._canvas = canvas
-        this._elevationControls = new ElevationControl()
     }
 
     public createScene() {
@@ -35,6 +34,7 @@ export class GameEditor implements Animatable {
             width: 20,
             height: 20,
         }, this._scene)
+        this._elevationControls = new ElevationControl(ground)
 
         let myMaterial = new BABYLON.StandardMaterial("myMaterial", this._scene)
         myMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1)
