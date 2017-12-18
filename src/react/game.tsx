@@ -10,7 +10,7 @@ export interface GameComponentProps {
     errorMessage: string;
 }
 
-class GameComponent extends React.Component<GameComponentProps, undefined> {
+export class GameComponent extends React.Component<GameComponentProps, undefined> {
     componentDidMount() {
         if (document.getElementById('renderCanvas')) {
             let game = new Game('renderCanvas');
@@ -30,5 +30,3 @@ class GameComponent extends React.Component<GameComponentProps, undefined> {
         }
     }
 }
-
-export { GameComponent }

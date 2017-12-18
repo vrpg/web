@@ -9,8 +9,9 @@ import { UUID } from '../util/uuid';
 import { ResourceManager } from './ResourceManager';
 import * as BABYLON from 'babylonjs'
 import * as GUI from 'babylonjs-gui'
+import { Animatable } from './Animatable'
 
-class Game implements EventListener {
+class Game implements EventListener, Animatable {
     private readonly _canvas: HTMLCanvasElement;
     private readonly _engine: BABYLON.Engine;
     private _scene: BABYLON.Scene;
