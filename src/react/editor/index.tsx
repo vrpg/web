@@ -4,7 +4,7 @@ import { MANAGEMENT_PATH } from '../management'
 import { UnAuthorized } from '../unauthorized'
 import { Dispatch } from 'redux'
 import { LogOutButton } from '../logoutbutton'
-import { GameEditor } from '../../game/GameEditor';
+import { GameEditor } from '../../game/editor/GameEditor';
 
 export const EDITOR_PATH = '/editor'
 
@@ -16,8 +16,9 @@ export interface EditorProps {
 
 export class Editor extends React.Component<EditorProps, undefined> {
     componentDidMount() {
-        if (document.getElementById('renderCanvas')) {
-            let gameEditor = new GameEditor('renderCanvas')
+        let canvas = document.getElementById('renderCanvas')
+        if (canvas && canvas instanceof HTMLCanvasElement) {
+            let gameEditor = new GameEditor(canvas as HTMLCanvasElement)
             gameEditor.createScene()
             gameEditor.animate()
         }
