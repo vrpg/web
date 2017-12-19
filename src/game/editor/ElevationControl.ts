@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs'
+import { disconnect } from 'cluster';
 
 interface Position {
     x: number
@@ -7,7 +8,7 @@ interface Position {
 
 export class ElevationControl {
 
-    private readonly HEIGHT = 0.2
+    private readonly HEIGHT = 0.1
     private readonly RADIUS = 1.0
     private readonly _ground: BABYLON.Mesh
     private _currentPosition: Position
@@ -70,9 +71,10 @@ export class ElevationControl {
                 let y = data[group + 1]
                 let z = data[group + 2]
 
-                let closeEnough = Math.abs(Math.sqrt(Math.pow(x - sphereCenter.x, 2) + Math.pow(z - sphereCenter.z, 2)) - radius) < radius
+                let distance = Math.sqrt(Math.pow(x - sphereCenter.x, 2) + Math.pow(z - sphereCenter.z, 2)) - radius
+                let closeEnough = distance < radius
                 if (closeEnough && y <= this._heightMax && y >= this._heightMin) {
-                    data[group + 1] = y + height
+                    data[group + 1] = y + (height * (radius - distance) / radius)
                 }
             }
         }, true)
