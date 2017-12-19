@@ -33,6 +33,8 @@ export class GameEditor implements Animatable {
         let ground = BABYLON.MeshBuilder.CreateGround("ground", {
             width: 20,
             height: 20,
+            updatable: true,
+            subdivisions: 200
         }, this._scene)
         this._elevationControls = new ElevationControl(ground)
 

@@ -7,21 +7,14 @@ interface Position {
 
 export class ElevationControl {
 
+    private readonly HEIGHT = 0.2
+    private readonly RADIUS = 1.0
     private readonly _ground: BABYLON.Mesh
     private _currentPosition: Position
     private _invertDirection: number = 1
-    private heightMin: number = 0
-    private heightMax: number = 11
-    private _facesOfVertices: Array<any> = []
-    private _groundVerticesPositions: BABYLON.FloatArray
-    private _groundVerticesNormals: BABYLON.FloatArray
-    private _groundPositions: Array<BABYLON.Vector3> = []
-    private _groundIndices: BABYLON.IndicesArray
-    private _groundFacesNormals: Array<BABYLON.Vector3> = []
-    private _subdivisionsOfVertices: any = []
+    private _heightMin: number = 0
+    private _heightMax: number = 11
     private _direction = -1
-    private _selectedVertices: Array<number> = []
-    private radius = 5.0;
 
     constructor(ground: BABYLON.Mesh) {
         this._ground = ground
@@ -62,190 +55,27 @@ export class ElevationControl {
         if (!pickInfo.hit) return
         if (pickInfo.pickedMesh != this._ground) return
 
-        this.elevateFaces(pickInfo, this.radius, 0.2);
+        this.elevateFaces(pickInfo, this.RADIUS, this.HEIGHT)
     }
 
     private elevateFaces = (pickInfo: BABYLON.PickingInfo, radius: number, height: number) => {
-        console.log("lel")
         let sphereCenter = pickInfo.pickedPoint
-        sphereCenter.y = 0
 
-        for (let subIndex = 0; subIndex < this._ground.subMeshes.length; subIndex++) {
-            let subMesh = this._ground.subMeshes[subIndex]
+        this._ground.updateMeshPositions((data: BABYLON.FloatArray) => {
+            let pointCount = Math.floor(data.length / 3)
 
-            if (!this.isIntersected(subMesh.getBoundingInfo().boundingBox, sphereCenter, radius)) {
-                continue
-            }
+            for (let i = 0; i < pointCount; i++) {
+                let group = i * 3
+                let x = data[group + 0]
+                let y = data[group + 1]
+                let z = data[group + 2]
 
-            for (let index = subMesh.verticesStart; index < subMesh.verticesStart + subMesh.verticesCount; index++) {
-                console.log(this._groundPositions)
-                let position = this._groundPositions[index]
-                sphereCenter.y = position.y
-
-                let distance = BABYLON.Vector3.Distance(position, sphereCenter)
-
-                if (distance < radius) {
-                    this._selectedVertices[index] = distance
+                let closeEnough = Math.abs(Math.sqrt(Math.pow(x - sphereCenter.x, 2) + Math.pow(z - sphereCenter.z, 2)) - radius) < radius
+                if (closeEnough && y <= this._heightMax && y >= this._heightMin) {
+                    data[group + 1] = y + height
                 }
             }
-        }
-
-        // Elevate vertices
-        for (let selectedVertice in this._selectedVertices) {
-            let position = this._groundPositions[selectedVertice]
-            let distance = this._selectedVertices[selectedVertice]
-
-            let fullHeight = height * this._direction * this._invertDirection
-            if (distance < radius * 0.3) {
-                position.y += fullHeight
-            } else {
-                position.y += fullHeight * (1.0 - (distance - radius * 0.3) / (radius * 0.7))
-            }
-
-            if (position.y > this.heightMax)
-                position.y = this.heightMax
-            else if (position.y < this.heightMin)
-                position.y = this.heightMin
-
-            this._groundVerticesPositions[+selectedVertice * 3 + 1] = position.y
-
-            this.updateSubdivisions(+selectedVertice)
-        }
-
-        // Normals
-        this.reComputeNormals()
-
-        // Update vertex buffer
-        this._ground.updateVerticesData(BABYLON.VertexBuffer.PositionKind, this._groundVerticesPositions)
-        this._ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, this._groundVerticesNormals)
-    }
-
-    private updateSubdivisions = (vertexIndex: number) => {
-        for (let index = 0; index < this._subdivisionsOfVertices[vertexIndex].length; index++) {
-            let sub = this._subdivisionsOfVertices[vertexIndex][index]
-            let boundingBox = sub.getBoundingInfo().boundingBox
-            let boundingSphere = sub.getBoundingInfo().boundingSphere
-
-            if (this._groundPositions[vertexIndex].y < boundingBox.minimum.y) {
-                boundingSphere.radius += Math.abs(this._groundPositions[vertexIndex].y - boundingBox.minimum.y)
-                boundingBox.minimum.y = this._groundPositions[vertexIndex].y
-            } else if (this._groundPositions[vertexIndex].y > boundingBox.maximum.y) {
-                boundingBox.maximum.y = this._groundPositions[vertexIndex].y
-            }
-        }
-
-        let boundingBox = this._ground.getBoundingInfo().boundingBox
-        let boundingSphere = this._ground.getBoundingInfo().boundingSphere
-        if (this._groundPositions[vertexIndex].y < boundingBox.minimum.y) {
-            boundingSphere.radius += Math.abs(this._groundPositions[vertexIndex].y - boundingBox.minimum.y)
-            boundingBox.minimum.y = this._groundPositions[vertexIndex].y
-        } else if (this._groundPositions[vertexIndex].y > boundingBox.maximum.y) {
-            boundingBox.maximum.y = this._groundPositions[vertexIndex].y
-        }
-    }
-
-    private reComputeNormals = () => {
-        let faces = []
-
-        for (let selectedVertice in this._selectedVertices) {
-            let faceOfVertices = this._facesOfVertices[selectedVertice]
-            for (let index = 0; index < faceOfVertices.length; index++) {
-                faces[faceOfVertices[index]] = true
-            }
-        }
-
-        for (let face in faces) {
-            this.computeFaceNormal(+face)
-        }
-
-        for (let face in faces) {
-            let faceInfo = this.getFaceVerticesIndex(+face)
-            this.computeNormal(faceInfo.v1)
-            this.computeNormal(faceInfo.v2)
-            this.computeNormal(faceInfo.v3)
-        }
-    }
-
-    private isIntersected = (boundingBox: BABYLON.BoundingBox, sphereCenter: BABYLON.Vector3, sphereRadius: number) => {
-        let vector = BABYLON.Vector3.Clamp(sphereCenter, boundingBox.minimumWorld, boundingBox.maximumWorld)
-        let num = BABYLON.Vector3.DistanceSquared(sphereCenter, vector)
-        return (num <= (sphereRadius * sphereRadius))
-    }
-
-    private prepareDataModelForElevation = () => {
-        if (this._facesOfVertices == null) {
-            this._facesOfVertices = []
-
-            this._groundVerticesPositions = this._ground.getVerticesData(BABYLON.VertexBuffer.PositionKind)
-            this._groundVerticesNormals = this._ground.getVerticesData(BABYLON.VertexBuffer.NormalKind)
-            this._groundIndices = this._ground.getIndices()
-
-            this._groundPositions = []
-            let index
-            for (index = 0; index < this._groundVerticesPositions.length; index += 3) {
-                this._groundPositions.push(new BABYLON.Vector3(this._groundVerticesPositions[index], this._groundVerticesPositions[index + 1], this._groundVerticesPositions[index + 2]))
-            }
-            console.log("prepareDataModelForElevation " + this._groundPositions)
-
-            for (index = 0; index < this._ground.getTotalIndices() / 3; index++) {
-                this.computeFaceNormal(index)
-            }
-
-            this.getFacesOfVertices()
-        }
-    }
-
-    private computeFaceNormal = (face: number) => {
-        let faceInfo = this.getFaceVerticesIndex(face)
-
-        let v1v2 = this._groundPositions[faceInfo.v1].subtract(this._groundPositions[faceInfo.v2])
-        let v3v2 = this._groundPositions[faceInfo.v3].subtract(this._groundPositions[faceInfo.v2])
-
-        this._groundFacesNormals[face] = BABYLON.Vector3.Normalize(BABYLON.Vector3.Cross(v1v2, v3v2))
-    }
-
-    private getFaceVerticesIndex = (faceID: number) => {
-        return {
-            v1: this._groundIndices[faceID * 3],
-            v2: this._groundIndices[faceID * 3 + 1],
-            v3: this._groundIndices[faceID * 3 + 2]
-        }
-    }
-
-    private getFacesOfVertices = () => {
-        this._facesOfVertices = []
-        this._subdivisionsOfVertices = []
-        let index
-
-        for (index = 0; index < this._groundPositions.length; index++) {
-            this._facesOfVertices[index] = []
-            this._subdivisionsOfVertices[index] = []
-        }
-
-        for (index = 0; index < this._groundIndices.length; index++) {
-            this._facesOfVertices[this._groundIndices[index]].push((index / 3) | 0)
-        }
-
-        for (let subIndex = 0; subIndex < this._ground.subMeshes.length; subIndex++) {
-            let subMesh = this._ground.subMeshes[subIndex]
-            for (index = subMesh.verticesStart; index < subMesh.verticesStart + subMesh.verticesCount; index++) {
-                this._subdivisionsOfVertices[index].push(subMesh)
-            }
-        }
-    }
-    private computeNormal = (vertexIndex: number) => {
-        let faces = this._facesOfVertices[vertexIndex]
-
-        let normal = BABYLON.Vector3.Zero()
-        for (let index = 0; index < faces.length; index++) {
-            normal = normal.add(this._groundFacesNormals[faces[index]])
-        }
-
-        normal = BABYLON.Vector3.Normalize(normal.scale(1.0 / faces.length))
-
-        this._groundVerticesNormals[vertexIndex * 3] = normal.x
-        this._groundVerticesNormals[vertexIndex * 3 + 1] = normal.y
-        this._groundVerticesNormals[vertexIndex * 3 + 2] = normal.z
+        }, true)
     }
 
     private onPointerDown = (event: PointerEvent) => {
@@ -255,14 +85,12 @@ export class ElevationControl {
             x: event.clientX,
             y: event.clientY
         }
-        console.log("down - " + JSON.stringify(this._currentPosition))
     }
 
     private onPointerUp = (event: PointerEvent) => {
         event.preventDefault()
 
         this._currentPosition = null
-        console.log("up")
     }
 
     private onPointerMove = (event: PointerEvent) => {
@@ -272,8 +100,6 @@ export class ElevationControl {
             return
         }
 
-        this._invertDirection = event.button == 2 ? -1 : 1
-
         this._currentPosition = {
             x: event.clientX,
             y: event.clientY
@@ -282,6 +108,5 @@ export class ElevationControl {
 
     private onLostFocus = () => {
         this._currentPosition = null
-        console.log("up")
     }
 }
