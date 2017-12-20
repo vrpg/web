@@ -6,6 +6,10 @@ interface Position {
     y: number
 }
 
+export enum ElevationMode {
+    UP, DOWN
+}
+
 export class ElevationControl {
 
     private readonly HEIGHT = 0.1
@@ -15,7 +19,7 @@ export class ElevationControl {
     private _invertDirection: number = 1
     private _heightMin: number = 0
     private _heightMax: number = 11
-    private _direction = -1
+    private _elevationMode: ElevationMode = ElevationMode.UP
 
     constructor(ground: BABYLON.Mesh) {
         this._ground = ground
@@ -29,8 +33,6 @@ export class ElevationControl {
         window.addEventListener("blur", this.onLostFocus, true)
 
         this._ground.getScene().registerBeforeRender(this.onBeforeRender)
-
-        console.log("attach")
     }
 
     detachControl = (canvas: HTMLCanvasElement) => {
@@ -41,25 +43,25 @@ export class ElevationControl {
         window.removeEventListener("blur", this.onLostFocus)
 
         this._ground.getScene().unregisterBeforeRender(this.onBeforeRender)
+    }
 
-        console.log("detach")
+    setElevationMode = (elevationMode: ElevationMode) => {
+        this._elevationMode = elevationMode
     }
 
     private onBeforeRender = () => {
         if (!this._currentPosition) {
             return
         }
-        console.log("before render")
-
         let pickInfo = this._ground.getScene().pick(this._currentPosition.x, this._currentPosition.y)
 
         if (!pickInfo.hit) return
         if (pickInfo.pickedMesh != this._ground) return
 
-        this.elevateFaces(pickInfo, this.RADIUS, this.HEIGHT)
+        this.elevateGround(pickInfo, this.RADIUS, this.HEIGHT)
     }
 
-    private elevateFaces = (pickInfo: BABYLON.PickingInfo, radius: number, height: number) => {
+    private elevateGround = (pickInfo: BABYLON.PickingInfo, radius: number, height: number) => {
         let sphereCenter = pickInfo.pickedPoint
 
         this._ground.updateMeshPositions((data: BABYLON.FloatArray) => {
@@ -74,7 +76,12 @@ export class ElevationControl {
                 let distance = Math.sqrt(Math.pow(x - sphereCenter.x, 2) + Math.pow(z - sphereCenter.z, 2)) - radius
                 let closeEnough = distance < radius
                 if (closeEnough && y <= this._heightMax && y >= this._heightMin) {
-                    data[group + 1] = y + (height * (radius - distance) / radius)
+                    let delta = height * (radius - distance) / radius
+                    if (this._elevationMode === ElevationMode.DOWN) {
+                        data[group + 1] = y - delta <= this._heightMin ? this._heightMin : y - delta
+                    } else {
+                        data[group + 1] = y + delta >= this._heightMax ? this._heightMax : y + delta
+                    }
                 }
             }
         }, true)
