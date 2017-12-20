@@ -1,5 +1,5 @@
 import { Animatable } from './../Animatable'
-import { ElevationControl } from './ElevationControl'
+import { ElevationControl, ElevationMode } from './ElevationControl'
 import * as BABYLON from 'babylonjs'
 import * as GUI from 'babylonjs-gui'
 
@@ -67,10 +67,27 @@ export class GameEditor implements Animatable {
         advancedTexture.addControl(panel)
 
         let cameraButton = this.createButton("cameraButton", "Camera", GameEditorMode.CAMERA)
+        cameraButton.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
         panel.addControl(cameraButton)
 
+        let elevationControlPanel = new GUI.StackPanel()
+        elevationControlPanel.isVertical = false
+        panel.addControl(elevationControlPanel)
+
         let elevationButton = this.createButton("elevationButton", "Elevation", GameEditorMode.ELEVATION)
-        panel.addControl(elevationButton)
+        elevationControlPanel.addControl(elevationButton)
+
+        let upButton = GUI.Button.CreateSimpleButton("upButton", "UP")
+        upButton.height = "50px"
+        upButton.width = "100px"
+        upButton.onPointerDownObservable.add(() => { this._elevationControls.setElevationMode(ElevationMode.UP) })
+        elevationControlPanel.addControl(upButton)
+
+        let downButton = GUI.Button.CreateSimpleButton("downButton", "DOWN")
+        downButton.height = "50px"
+        downButton.width = "100px"
+        downButton.onPointerDownObservable.add(() => { this._elevationControls.setElevationMode(ElevationMode.DOWN) })
+        elevationControlPanel.addControl(downButton)
     }
 
     private createButton(name: string, text: string, toMode: GameEditorMode): GUI.Button {
