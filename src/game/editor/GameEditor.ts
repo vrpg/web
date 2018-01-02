@@ -80,13 +80,13 @@ export class GameEditor implements Animatable {
         let upButton = GUI.Button.CreateSimpleButton("upButton", "UP")
         upButton.height = "50px"
         upButton.width = "100px"
-        upButton.onPointerDownObservable.add(() => { this._elevationControls.setElevationMode(ElevationMode.UP) })
+        upButton.onPointerDownObservable.add(() => { this._elevationControls.elevationMode = ElevationMode.UP })
         elevationControlPanel.addControl(upButton)
 
         let downButton = GUI.Button.CreateSimpleButton("downButton", "DOWN")
         downButton.height = "50px"
         downButton.width = "100px"
-        downButton.onPointerDownObservable.add(() => { this._elevationControls.setElevationMode(ElevationMode.DOWN) })
+        downButton.onPointerDownObservable.add(() => { this._elevationControls.elevationMode = ElevationMode.DOWN })
         elevationControlPanel.addControl(downButton)
     }
 

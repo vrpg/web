@@ -16,10 +16,9 @@ export class ElevationControl {
     private readonly RADIUS = 1.0
     private readonly _ground: BABYLON.Mesh
     private _currentPosition: Position
-    private _invertDirection: number = 1
-    private _heightMin: number = 0
-    private _heightMax: number = 11
-    private _elevationMode: ElevationMode = ElevationMode.UP
+    heightMin: number = 0
+    heightMax: number = 11
+    elevationMode: ElevationMode = ElevationMode.UP
 
     constructor(ground: BABYLON.Mesh) {
         this._ground = ground
@@ -43,10 +42,6 @@ export class ElevationControl {
         window.removeEventListener("blur", this.onLostFocus)
 
         this._ground.getScene().unregisterBeforeRender(this.onBeforeRender)
-    }
-
-    setElevationMode = (elevationMode: ElevationMode) => {
-        this._elevationMode = elevationMode
     }
 
     private onBeforeRender = () => {
@@ -75,12 +70,12 @@ export class ElevationControl {
 
                 let distance = Math.sqrt(Math.pow(x - sphereCenter.x, 2) + Math.pow(z - sphereCenter.z, 2)) - radius
                 let closeEnough = distance < radius
-                if (closeEnough && y <= this._heightMax && y >= this._heightMin) {
+                if (closeEnough && y <= this.heightMax && y >= this.heightMin) {
                     let delta = height * (radius - distance) / radius
-                    if (this._elevationMode === ElevationMode.DOWN) {
-                        data[group + 1] = y - delta <= this._heightMin ? this._heightMin : y - delta
+                    if (this.elevationMode === ElevationMode.DOWN) {
+                        data[group + 1] = y - delta <= this.heightMin ? this.heightMin : y - delta
                     } else {
-                        data[group + 1] = y + delta >= this._heightMax ? this._heightMax : y + delta
+                        data[group + 1] = y + delta >= this.heightMax ? this.heightMax : y + delta
                     }
                 }
             }
