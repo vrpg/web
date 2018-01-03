@@ -19,3 +19,8 @@ install:
   - npm run pbjs
   - npm run pbts
   - npm run build:prod
+
+deploy:
+  provider: firebase
+  token:
+    secure: $FIREBASE_TOKEN
