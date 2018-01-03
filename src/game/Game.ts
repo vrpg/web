@@ -1,7 +1,7 @@
 /// <reference path="../references.ts" />
 
 import * as $protobuf from "protobufjs";
-import { SocketMessage as GameMessage, SocketMessageType as GameMessageType } from "../proto/compiled";
+import * as PROTO from "../proto/compiled";
 import { Player } from "./player/Player";
 import { EventSocket } from '../communication/EventSocket';
 import { EventListener } from '../communication/EventListener';
@@ -49,20 +49,30 @@ class Game implements EventListener, Animatable {
         let position: BABYLON.Vector3 = this._player.getPlayer().position;
 
         this._eventSocket.onOpen(() => {
-            let joinMessage = new GameMessage({
-                eventType: GameMessageType.JOIN,
+            let joinMessage = new PROTO.JoinMessage({
                 eventSource: this._player._playerId,
                 x: position.x,
                 y: position.y,
                 z: position.z
             });
-            this._eventSocket.sendEvent(joinMessage);
 
-            let getStateMessage = new GameMessage({
-                eventType: GameMessageType.GET_STATE,
-                eventSource: this._player._playerId
+            let socketEnvelope = new PROTO.SocketEnvelope({
+                socketMessage: new PROTO.SocketMessage({
+                    messageType: PROTO.SocketMessageType.JOIN_SOCKET,
+                    message: PROTO.JoinMessage.encode(joinMessage).finish()
+                })
             });
-            this._eventSocket.sendEvent(getStateMessage);
+
+            this._eventSocket.sendEvent(socketEnvelope);
+
+            socketEnvelope.socketMessage = new PROTO.SocketMessage({
+                messageType: PROTO.SocketMessageType.GET_STATE_SOCKET,
+                message: PROTO.GetStateMessage.encode(new PROTO.GetStateMessage({
+                    eventSource: this._player._playerId
+                })).finish()
+            });
+
+            this._eventSocket.sendEvent(socketEnvelope);
         });
 
         let meshTask = ResourceManager.addMeshTask("test.obj");
@@ -141,37 +151,44 @@ class Game implements EventListener, Animatable {
         });
     }
 
-    onEvent(event: GameMessage): void {
-        let source: string = event.eventSource;
-        switch (event.eventType) {
-            case GameMessageType.JOIN:
-                this._players.push(new Player(source, new BABYLON.Vector3(Number(event.x), Number(event.y), Number(event.z)), this._scene));
+    onEvent(event: PROTO.SocketEnvelope): void {
+        switch (event.socketMessage.messageType) {
+            case PROTO.SocketMessageType.JOIN_SOCKET:
+                let joinMessage = PROTO.JoinMessage.decode(event.socketMessage.message)
+
+                this._players.push(new Player(joinMessage.eventSource, new BABYLON.Vector3(Number(joinMessage.x), Number(joinMessage.y), Number(joinMessage.z)), this._scene));
                 break;
-            case GameMessageType.STATE:
+            case PROTO.SocketMessageType.STATE_SOCKET:
+                let stateMessage = PROTO.StateMessage.decode(event.socketMessage.message)
+
                 let found: boolean;
                 for (let i in this._players) {
-                    if (this._players[i]._playerId === source) {
+                    if (this._players[i]._playerId === stateMessage.eventSource) {
                         found = true;
                     }
                 }
                 if (!found) {
-                    this._players.push(new Player(source, new BABYLON.Vector3(event.x, event.y, event.z), this._scene));
+                    this._players.push(new Player(stateMessage.eventSource, new BABYLON.Vector3(stateMessage.x, stateMessage.y, stateMessage.z), this._scene));
                 }
-            case GameMessageType.MOVE:
+            case PROTO.SocketMessageType.MOVE_SOCKET:
+                let moveMessage = PROTO.MoveMessage.decode(event.socketMessage.message)
+
                 this._players.forEach(p => {
-                    if (p._playerId === source) {
+                    if (p._playerId === moveMessage.eventSource) {
                         let mesh: BABYLON.Mesh = p.getPlayer();
-                        mesh.position.x = event.x;
-                        mesh.position.y = event.y;
-                        mesh.position.z = event.z;
+                        mesh.position.x = moveMessage.x;
+                        mesh.position.y = moveMessage.y;
+                        mesh.position.z = moveMessage.z;
                     }
                 });
                 break;
-            case GameMessageType.LEAVE:
+            case PROTO.SocketMessageType.LEAVE_SOCKET:
+                let leaveMessage = PROTO.LeaveMessage.decode(event.socketMessage.message)
+
                 let indexForDelete: number;
                 for (let i in this._players) {
                     let p: Player = this._players[i];
-                    if (p._playerId === source) {
+                    if (p._playerId === leaveMessage.eventSource) {
                         indexForDelete = this._players.indexOf(p);
                         p.getPlayer().dispose();
                     }
@@ -180,21 +197,29 @@ class Game implements EventListener, Animatable {
                     this._players.splice(indexForDelete, 1);
                 }
                 break;
-            case GameMessageType.GET_STATE:
+            case PROTO.SocketMessageType.GET_STATE_SOCKET:
+                let getStateMessage = PROTO.GetStateMessage.decode(event.socketMessage.message)
+
                 let pos: BABYLON.Vector3 = this._player.getPlayer().position;
 
-                let gameMessage = new GameMessage({
-                    eventType: GameMessageType.STATE,
+                let stateResponseMessage = new PROTO.StateMessage({
                     eventSource: this._player._playerId,
                     x: pos.x,
                     y: pos.y,
                     z: pos.z
-                });
+                })
 
-                this._eventSocket.sendEvent(gameMessage);
+                let socketEnvelope = new PROTO.SocketEnvelope({
+                    socketMessage: new PROTO.SocketMessage({
+                        messageType: PROTO.SocketMessageType.STATE_SOCKET,
+                        message: PROTO.StateMessage.encode(stateResponseMessage).finish()
+                    })
+                })
+
+                this._eventSocket.sendEvent(socketEnvelope);
                 break;
             default:
-                console.warn("unexpected eventName: " + event.eventType);
+                console.warn("unexpected eventName: " + event.socketMessage.messageType);
         }
     }
 }

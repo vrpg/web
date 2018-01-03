@@ -1,5 +1,5 @@
 /// <reference path="../references.ts" />
-import { SocketMessage as GameMessage } from "../proto/compiled";
+import { SocketEnvelope, ISocketEnvelope } from "../proto/compiled";
 import { EventListener } from './EventListener';
 
 class EventSocket {
@@ -31,9 +31,9 @@ class EventSocket {
 
             let json = JSON.parse(onMessageEvent.data);
 
-            let gameMessage = GameMessage.fromObject(json);
+            let socketEnvelope = SocketEnvelope.fromObject(json);
 
-            this.notifyListeners(gameMessage);
+            this.notifyListeners(socketEnvelope);
         }
     }
 
@@ -41,7 +41,7 @@ class EventSocket {
         this._opOpenCallback = callback;
     }
 
-    public sendEvent(event: GameMessage): void {
+    public sendEvent(event: SocketEnvelope): void {
         if (!this._isConnected) {
             console.warn("Not connected!");
             return;
@@ -50,7 +50,7 @@ class EventSocket {
         this._socket.send(JSON.stringify(event.toJSON()));
     }
 
-    private notifyListeners(event: GameMessage): void {
+    private notifyListeners(event: ISocketEnvelope): void {
         this._listeners.forEach(listener => {
             listener.onEvent(event);
         });

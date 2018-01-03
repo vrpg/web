@@ -1,7 +1,7 @@
-import { SocketMessage as GameMessage } from '../proto/compiled';
+import { ISocketEnvelope } from '../proto/compiled';
 
 interface EventListener {
-    onEvent(event: GameMessage): void;
+    onEvent(event: ISocketEnvelope): void;
 }
 
 export { EventListener }

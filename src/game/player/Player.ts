@@ -2,8 +2,8 @@
 
 import * as BABYLON from 'babylonjs'
 import { EventSocket } from '../../communication/EventSocket';
-import { SocketMessage as GameMessage, SocketMessageType as GameMessageType } from "../../proto/compiled";
 import { ResourceManager } from '../ResourceManager';
+import { SocketEnvelope, SocketMessage, SocketMessageType, MoveMessage } from '../../proto/compiled';
 
 class Player {
     private readonly _mesh: BABYLON.Mesh;
@@ -64,15 +64,19 @@ class Player {
         if (this._eventSocket) {
             let pos: BABYLON.Vector3 = this._mesh.position;
 
-            let gameMessage = new GameMessage({
-                eventSource: this._playerId,
-                eventType: GameMessageType.MOVE,
-                x: pos.x,
-                y: pos.y,
-                z: pos.z,
-            });
+            let socketEnvelope = new SocketEnvelope({
+                socketMessage: new SocketMessage({
+                    messageType: SocketMessageType.MOVE_SOCKET,
+                    message: MoveMessage.encode(new MoveMessage({
+                        eventSource: this._playerId,
+                        x: pos.x,
+                        y: pos.y,
+                        z: pos.z
+                    })).finish()
+                })
+            })
 
-            this._eventSocket.sendEvent(gameMessage);
+            this._eventSocket.sendEvent(socketEnvelope);
         }
     }
 }
