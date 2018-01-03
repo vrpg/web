@@ -2,6 +2,7 @@ import { Animatable } from './../Animatable'
 import { ElevationControl, ElevationMode } from './ElevationControl'
 import * as BABYLON from 'babylonjs'
 import * as GUI from 'babylonjs-gui'
+import 'babylonjs-serializers'
 
 export enum GameEditorMode {
     CAMERA, ELEVATION
@@ -14,10 +15,17 @@ export class GameEditor implements Animatable {
     private _scene: BABYLON.Scene
     private _editorMode: GameEditorMode
     private _camera: BABYLON.UniversalCamera
+    private _ground: BABYLON.Mesh
 
     constructor(canvas: HTMLCanvasElement) {
         this._engine = new BABYLON.Engine(canvas, true)
         this._canvas = canvas
+    }
+
+    public exportGround(): string {
+        let _export = BABYLON.OBJExport.OBJ([this._ground])
+        console.log(_export)
+        return _export
     }
 
     public createScene() {
@@ -30,18 +38,18 @@ export class GameEditor implements Animatable {
 
         let light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 1), this._scene)
 
-        let ground = BABYLON.MeshBuilder.CreateGround("ground", {
+        this._ground = BABYLON.MeshBuilder.CreateGround("ground", {
             width: 20,
             height: 20,
             updatable: true,
             subdivisions: 200
         }, this._scene)
-        this._elevationControls = new ElevationControl(ground)
+        this._elevationControls = new ElevationControl(this._ground)
 
         let myMaterial = new BABYLON.StandardMaterial("myMaterial", this._scene)
         myMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1)
 
-        ground.material = myMaterial;
+        this._ground.material = myMaterial;
 
         this.changeMode(GameEditorMode.CAMERA)
         this.createMenu()
@@ -88,6 +96,12 @@ export class GameEditor implements Animatable {
         downButton.width = "100px"
         downButton.onPointerDownObservable.add(() => { this._elevationControls.elevationMode = ElevationMode.DOWN })
         elevationControlPanel.addControl(downButton)
+
+        let exportButton = GUI.Button.CreateSimpleButton("exportButton", "Export")
+        exportButton.height = "50px"
+        exportButton.width = "100px"
+        exportButton.onPointerDownObservable.add(() => { this.exportGround() })
+        panel.addControl(exportButton)
     }
 
     private createButton(name: string, text: string, toMode: GameEditorMode): GUI.Button {
