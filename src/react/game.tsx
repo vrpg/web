@@ -19,14 +19,14 @@ export class GameComponent extends React.Component<GameComponentProps, undefined
         }
     }
     render() {
-        if (this.props.isAuthenticated) {
-            return (
-                <div id="game">
-                    <canvas id="renderCanvas" />
-                </div>
-            );
-        } else {
-            return <UnAuthorized errormessage={this.props.errorMessage} />
-        }
+        // if (this.props.isAuthenticated) {
+        return (
+            <div id="game">
+                <canvas id="renderCanvas" />
+            </div>
+        );
+        // } else {
+        // return <UnAuthorized errormessage={this.props.errorMessage} />
+        // }
     }
 }
