@@ -1,5 +1,8 @@
 import * as React from 'react'
 import { NavigatorButton } from '../navigatorbutton'
+import { ServerApi } from '../../communication/ServerApi';
+import { LOBBY_PATH } from '../lobby/index';
+import { LOGIN_PATH } from '../login/index';
 
 const loginContainerStyle: React.CSSProperties = {
     margin: 'auto',
@@ -21,9 +24,9 @@ const buttonAreaStyle: React.CSSProperties = {
 
 export interface RegisterState { username: string; password: string }
 
-export const REGISTER_PATH:string = '/register'
+export const REGISTER_PATH: string = '/register'
 
-class Register extends React.Component<undefined, RegisterState> {
+export class Register extends React.Component<undefined, RegisterState> {
     constructor(props: any) {
         super(props);
 
@@ -43,17 +46,17 @@ class Register extends React.Component<undefined, RegisterState> {
         this.setState({ password: event.target.value })
     }
 
-    handleLogin(event?: any): boolean {
-        return true;
+    handleLogin(event?: any): Promise<boolean> {
+        return Promise.resolve(true);
     }
 
-    handleRegister(event?: any): boolean {
-        //TODO register logic
-        console.log("Register user: " + this.state.username + ", password: " + this.state.password);
-        return true;
+    handleRegister(event?: any): Promise<boolean> {
+        return ServerApi.getInstance()
+            .register(this.state.username, this.state.password)
+            .catch(err => false)
+            .then(() => true)
     }
     render() {
-        console.log("render")
         return (
             <div className="login-container" style={loginContainerStyle}>
                 <div className="form-area">
@@ -67,12 +70,10 @@ class Register extends React.Component<undefined, RegisterState> {
                     </div>
                 </div>
                 <div style={buttonAreaStyle}>
-                    <NavigatorButton title="Register" to="lobby" onClick={this.handleRegister} />
-                    <NavigatorButton title="Back to Login" to="/" onClick={this.handleLogin} />
+                    <NavigatorButton title="Register" to={LOBBY_PATH} onClick={this.handleRegister} />
+                    <NavigatorButton title="Back to Login" to={LOGIN_PATH} onClick={this.handleLogin} />
                 </div>
             </div>
         );
     }
 }
-
-export { Register }

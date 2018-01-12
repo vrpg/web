@@ -5,28 +5,23 @@ import { GAME_PATH } from '../game'
 import { UnAuthorized } from '../unauthorized'
 import { Dispatch } from 'redux'
 import { LogOutButton } from '../logoutbutton'
+import { SessionManager } from '../../communication/SessionManager';
 
 export const LOBBY_PATH: string = '/lobby'
 
-export interface LobbyProps {
-    isAuthenticated: boolean;
-    errorMessage: string;
-    dispatch: Dispatch<any>;
-}
-
-export class Lobby extends React.Component<LobbyProps, undefined> {
+export class Lobby extends React.Component<undefined, undefined> {
     render() {
-        if (this.props.isAuthenticated) {
+        if (SessionManager.getInstance().isAuthenticated()) {
             return (
                 <div >
-                    <NavigatorButton title="Open Game" to={GAME_PATH} onClick={() => true} />
-                    <NavigatorButton title="Go to management" to={MANAGEMENT_PATH} onClick={() => true} />
-                    <LogOutButton dispatch={this.props.dispatch} />
+                    <NavigatorButton title="Open Game" to={GAME_PATH} onClick={() => Promise.resolve(true)} />
+                    <NavigatorButton title="Go to management" to={MANAGEMENT_PATH} onClick={() => Promise.resolve(true)} />
+                    <LogOutButton />
                 </div>
             );
         } else {
             return (
-                <UnAuthorized errormessage={this.props.errorMessage} />
+                <UnAuthorized errormessage={SessionManager.getInstance().message} />
             );
         }
     }

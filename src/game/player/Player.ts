@@ -65,10 +65,10 @@ class Player {
             let pos: BABYLON.Vector3 = this._mesh.position;
 
             let socketEnvelope = new SocketEnvelope({
-                socketMessage: new SocketMessage({
-                    messageType: SocketMessageType.MOVE_SOCKET,
+                socket_message: new SocketMessage({
+                    message_type: SocketMessageType.MOVE_SOCKET,
                     message: MoveMessage.encode(new MoveMessage({
-                        eventSource: this._playerId,
+                        event_source: this._playerId,
                         x: pos.x,
                         y: pos.y,
                         z: pos.z

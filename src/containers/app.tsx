@@ -45,12 +45,10 @@ export class App extends React.Component<AppProps, AppState> {
     render() {
         return <Router >
             <div style={fullScreen}>
-                <Route exact path={LOGIN_PATH} component={() => <Login dispatch={this.props.dispatch}
-                    errorMessage={this.props.errorMessage} isAuthenticated={this.props.isAuthenticated} />} />
+                <Route exact path={LOGIN_PATH} component={() => <Login />} />
                 <Route path={GAME_PATH} component={() => <Game isAuthenticated={this.props.isAuthenticated}
                     errorMessage={this.props.errorMessage} />} />
-                <Route path={LOBBY_PATH} render={({ history }) => <Lobby isAuthenticated={this.props.isAuthenticated}
-                    errorMessage={this.props.errorMessage} dispatch={this.props.dispatch} />} />
+                <Route path={LOBBY_PATH} render={({ history }) => <Lobby />} />
                 <Route path={REGISTER_PATH} component={Register} />
                 <Route path={MANAGEMENT_PATH} component={() => <Management isAuthenticated={this.props.isAuthenticated}
                     errorMessage={this.props.errorMessage} dispatch={this.props.dispatch} />} />

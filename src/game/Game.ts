@@ -50,25 +50,25 @@ class Game implements EventListener, Animatable {
 
         this._eventSocket.onOpen(() => {
             let joinMessage = new PROTO.JoinMessage({
-                eventSource: this._player._playerId,
+                event_source: this._player._playerId,
                 x: position.x,
                 y: position.y,
                 z: position.z
             });
 
             let socketEnvelope = new PROTO.SocketEnvelope({
-                socketMessage: new PROTO.SocketMessage({
-                    messageType: PROTO.SocketMessageType.JOIN_SOCKET,
+                socket_message: new PROTO.SocketMessage({
+                    message_type: PROTO.SocketMessageType.JOIN_SOCKET,
                     message: PROTO.JoinMessage.encode(joinMessage).finish()
                 })
             });
 
             this._eventSocket.sendEvent(socketEnvelope);
 
-            socketEnvelope.socketMessage = new PROTO.SocketMessage({
-                messageType: PROTO.SocketMessageType.GET_STATE_SOCKET,
+            socketEnvelope.socket_message = new PROTO.SocketMessage({
+                message_type: PROTO.SocketMessageType.GET_STATE_SOCKET,
                 message: PROTO.GetStateMessage.encode(new PROTO.GetStateMessage({
-                    eventSource: this._player._playerId
+                    event_source: this._player._playerId
                 })).finish()
             });
 
@@ -152,29 +152,29 @@ class Game implements EventListener, Animatable {
     }
 
     onEvent(event: PROTO.SocketEnvelope): void {
-        switch (event.socketMessage.messageType) {
+        switch (event.socket_message.message_type) {
             case PROTO.SocketMessageType.JOIN_SOCKET:
-                let joinMessage = PROTO.JoinMessage.decode(event.socketMessage.message)
+                let joinMessage = PROTO.JoinMessage.decode(event.socket_message.message)
 
-                this._players.push(new Player(joinMessage.eventSource, new BABYLON.Vector3(Number(joinMessage.x), Number(joinMessage.y), Number(joinMessage.z)), this._scene));
+                this._players.push(new Player(joinMessage.event_source, new BABYLON.Vector3(Number(joinMessage.x), Number(joinMessage.y), Number(joinMessage.z)), this._scene));
                 break;
             case PROTO.SocketMessageType.STATE_SOCKET:
-                let stateMessage = PROTO.StateMessage.decode(event.socketMessage.message)
+                let stateMessage = PROTO.StateMessage.decode(event.socket_message.message)
 
                 let found: boolean;
                 for (let i in this._players) {
-                    if (this._players[i]._playerId === stateMessage.eventSource) {
+                    if (this._players[i]._playerId === stateMessage.event_source) {
                         found = true;
                     }
                 }
                 if (!found) {
-                    this._players.push(new Player(stateMessage.eventSource, new BABYLON.Vector3(stateMessage.x, stateMessage.y, stateMessage.z), this._scene));
+                    this._players.push(new Player(stateMessage.event_source, new BABYLON.Vector3(stateMessage.x, stateMessage.y, stateMessage.z), this._scene));
                 }
             case PROTO.SocketMessageType.MOVE_SOCKET:
-                let moveMessage = PROTO.MoveMessage.decode(event.socketMessage.message)
+                let moveMessage = PROTO.MoveMessage.decode(event.socket_message.message)
 
                 this._players.forEach(p => {
-                    if (p._playerId === moveMessage.eventSource) {
+                    if (p._playerId === moveMessage.event_source) {
                         let mesh: BABYLON.Mesh = p.getPlayer();
                         mesh.position.x = moveMessage.x;
                         mesh.position.y = moveMessage.y;
@@ -183,12 +183,12 @@ class Game implements EventListener, Animatable {
                 });
                 break;
             case PROTO.SocketMessageType.LEAVE_SOCKET:
-                let leaveMessage = PROTO.LeaveMessage.decode(event.socketMessage.message)
+                let leaveMessage = PROTO.LeaveMessage.decode(event.socket_message.message)
 
                 let indexForDelete: number;
                 for (let i in this._players) {
                     let p: Player = this._players[i];
-                    if (p._playerId === leaveMessage.eventSource) {
+                    if (p._playerId === leaveMessage.event_source) {
                         indexForDelete = this._players.indexOf(p);
                         p.getPlayer().dispose();
                     }
@@ -198,20 +198,20 @@ class Game implements EventListener, Animatable {
                 }
                 break;
             case PROTO.SocketMessageType.GET_STATE_SOCKET:
-                let getStateMessage = PROTO.GetStateMessage.decode(event.socketMessage.message)
+                let getStateMessage = PROTO.GetStateMessage.decode(event.socket_message.message)
 
                 let pos: BABYLON.Vector3 = this._player.getPlayer().position;
 
                 let stateResponseMessage = new PROTO.StateMessage({
-                    eventSource: this._player._playerId,
+                    event_source: this._player._playerId,
                     x: pos.x,
                     y: pos.y,
                     z: pos.z
                 })
 
                 let socketEnvelope = new PROTO.SocketEnvelope({
-                    socketMessage: new PROTO.SocketMessage({
-                        messageType: PROTO.SocketMessageType.STATE_SOCKET,
+                    socket_message: new PROTO.SocketMessage({
+                        message_type: PROTO.SocketMessageType.STATE_SOCKET,
                         message: PROTO.StateMessage.encode(stateResponseMessage).finish()
                     })
                 })
@@ -219,7 +219,7 @@ class Game implements EventListener, Animatable {
                 this._eventSocket.sendEvent(socketEnvelope);
                 break;
             default:
-                console.warn("unexpected eventName: " + event.socketMessage.messageType);
+                console.warn("unexpected eventName: " + event.socket_message.message_type);
         }
     }
 }

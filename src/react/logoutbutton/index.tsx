@@ -4,20 +4,15 @@ import { logoutUser } from './../../actions'
 import { LOGIN_PATH } from '../login'
 import { NavigatorButton } from '../navigatorbutton'
 
-interface LogOutButtonProps {
-    dispatch: Dispatch<any>;
-}
-
-export class LogOutButton extends React.Component<LogOutButtonProps, undefined> {
+export class LogOutButton extends React.Component<undefined, undefined> {
     constructor(props: any) {
         super(props)
 
         this.handleLogout = this.handleLogout.bind(this)
     }
 
-    handleLogout(event: any): boolean {
-        this.props.dispatch(logoutUser())
-        return true
+    handleLogout(): Promise<boolean> {
+        return Promise.resolve(true)
     }
 
     render() {

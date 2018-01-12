@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import { History } from 'history';
 
-export interface NavigatorButtonProps { title: string; to: string; onClick: (event: any) => boolean }
+export interface NavigatorButtonProps { title: string; to: string; onClick: () => Promise<boolean> }
 
 export class NavigatorButton extends React.Component<NavigatorButtonProps, undefined> {
     constructor(props: any) {
@@ -10,9 +10,13 @@ export class NavigatorButton extends React.Component<NavigatorButtonProps, undef
     }
 
     handleClick(event: any, history: History) {
-        if (this.props.onClick.apply(event)) {
-            history.push(this.props.to);
-        }
+        let promise = this.props.onClick.apply(({})) as Promise<boolean>
+
+        promise.then(navigate => {
+            if (navigate) {
+                history.push(this.props.to);
+            }
+        })
     }
 
     render() {

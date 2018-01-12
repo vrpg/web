@@ -19,7 +19,7 @@ export class Management extends React.Component<ManagementProps, undefined> {
             return <div>
                 <Upload endPoint="/management/fileUploadObj" title="Upload obj" />
                 <Upload endPoint="/management/fileUploadMtl" title="Upload mtl" />
-                <LogOutButton dispatch={this.props.dispatch} />
+                <LogOutButton />
             </div>
         } else {
             return <UnAuthorized errormessage={this.props.errorMessage} />

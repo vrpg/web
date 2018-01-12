@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { NavigatorButton } from '../navigatorbutton';
-import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
-import { loginUser } from '../../actions'
 import { LOBBY_PATH } from '../lobby'
 import { REGISTER_PATH } from '../register'
+import { ServerApi } from '../../communication/ServerApi';
+import { LoginResponseMessage } from '../../proto/compiled';
 
 const loginContainerStyle: React.CSSProperties = {
     margin: 'auto',
@@ -26,15 +25,9 @@ const buttonAreaStyle: React.CSSProperties = {
 
 export interface LoginState { username: string; password: string; }
 
-export interface LoginProps {
-    dispatch: Dispatch<any>;
-    isAuthenticated: boolean;
-    errorMessage: string
-}
-
 export const LOGIN_PATH = "/";
 
-export class Login extends React.Component<LoginProps, LoginState> {
+export class Login extends React.Component<undefined, LoginState> {
 
     constructor(props: any) {
         super(props);
@@ -58,18 +51,18 @@ export class Login extends React.Component<LoginProps, LoginState> {
         this.setState({ password: event.target.value })
     }
 
-    handleLogin(event?: any): boolean {
-        this.props.dispatch(loginUser({
-            username: this.state.username,
-            password: this.state.password
-        }))
-        return true;
+    handleLogin(event?: any): Promise<boolean> {
+        return ServerApi.getInstance().login(this.state.username, this.state.password)
+        .then(loginRepsonse => {
+            console.log("2 - " + loginRepsonse)
+            return true
+        })
+        .catch(err => false)
     }
 
-    handleRegister(event?: any): boolean {
+    handleRegister(event?: any): Promise<boolean> {
         console.log("register");
-        //TODO not implemented yet
-        return true;
+        return Promise.resolve(true);
     }
 
     render() {

@@ -11,7 +11,7 @@ export class UnAuthorized extends React.Component<UnAuthorizedProps, undefined> 
         return (
             <div>
                 <div>{this.props.errormessage}</div>
-                <NavigatorButton onClick={() => true} title="Go to login!" to={LOGIN_PATH} />
+                <NavigatorButton onClick={() => Promise.resolve(true)} title="Go to login!" to={LOGIN_PATH} />
             </div>
         );
     }
